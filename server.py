@@ -1,35 +1,31 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from boardconverter import BoardConverter
 from game import Game
 from player import Player
 from model import ConnectFourModel
 from tensorflow import keras
 import urllib.parse as urlparse
-#from keras.models import Sequential
+from typing import List, string
+from ailevel import AILevel
+from playerstrategy import PlayerStrategy
 
 model = ConnectFourModel(42, 3, 50, 10)
 model.model = keras.models.load_model('./c4model')
 
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
-        parsed_url = urlparse.urlparse(self.path)
-        params = urlparse.parse_qs(parsed_url.query)
+        parsed_url : string = urlparse.urlparse(self.path)
+        params : List[List[string]] = urlparse.parse_qs(parsed_url.query)
         #print(params)
-        currentplayer = int(params['currentplayer'][0])
-        level = int(params['level'][0])
-        boardA = params['board'][0].split('-')
-        i = 0
-        board = []
-        for r in range(Game.NUM_ROWS) :
-            row = []
-            for c in range(Game.NUM_COLUMNS) :
-                row.append(int(boardA[i]))
-                i = i + 1
-            board.append(row)
-            
+        currentplayer : int = int(params['currentplayer'][0])
+        level : AILevel = int(params['level'][0])
+        board : List[List[int]] = BoardConverter.convertFromString(params['board'][0])
+        if not Game.isValid():
+            print('board not valid!')           
         #print(board)
-        game = Game()
-        game.board = board#= #TODO load board from request
-        p = Player(currentplayer, level, strategy = 'model', model = model)
+        game : Game = Game()
+        game.board = board
+        p = Player(currentplayer, level, PlayerStrategy.Model, model = model)
         nextMove = p.getMove(game.getAvailableMoves(), board)
         print(nextMove)
         responseText = str(nextMove[1]).encode("utf-8")
