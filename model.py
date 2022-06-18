@@ -16,7 +16,7 @@ class ConnectFourModel:
         self.__numberOfOutputs = numberOfOutputs
         self.__batchSize = batchSize
         self.__epochs = epochs
-        self.model = Sequential()
+        self.model : Sequential = Sequential()
         self.model.add(Dense(numberOfInputs, activation='relu', input_shape=(numberOfInputs,)))
         self.model.add(Dense(numberOfInputs, activation='relu'))
         self.model.add(Dense(numberOfOutputs, activation='softmax'))

@@ -1,7 +1,6 @@
 import copy
 from typing import List, Tuple
 from game import Game
-from boardvalue import BoardValue
 from player import Player
 
 class GameController:
@@ -9,7 +8,7 @@ class GameController:
     game : Game
     redPlayer : Player
     bluePlayer : Player
-    trainingHistory : List[Tuple[int, List[List[BoardValue]]]]
+    trainingHistory : List[Tuple[int, List[List[int]]]]
 
     def __init__(self, game : Game, redPlayer : Player, bluePlayer : Player):
         self.game = game
@@ -24,9 +23,9 @@ class GameController:
         for i in range(numberOfGames):
             self.game.resetBoard()
             self.playGame()
-            if self.game.getGameResult() == BoardValue.RED_PLAYER_VAL:
+            if self.game.getGameResult() == Game.RED_PLAYER_VAL:
                 redPlayerWins = redPlayerWins + 1
-            elif self.game.getGameResult() == BoardValue.BLUE_PLAYER_VAL:
+            elif self.game.getGameResult() == Game.BLUE_PLAYER_VAL:
                 bluePlayerWins = bluePlayerWins + 1
             else:
                 draws = draws + 1

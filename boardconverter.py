@@ -1,23 +1,25 @@
-from boardvalue import BoardValue
 from game import Game
-from typing import string, List
+from typing import List
 
 from utils import Utils
 
 class BoardConverter:
 
-    SPLITTER : string = '-'
+    SPLITTER : str = '-'
 
-    def convertFromString(boardAsString : string) -> List[List[BoardValue]]:
+    @staticmethod
+    def convertFromString(boardAsString : str) -> List[List[int]]:
         boardA = boardAsString.split(BoardConverter.SPLITTER)
         i = 0
-        board = []
+        board : List[List[int]] = []
         for r in range(Game.NUM_ROWS) :
             row = []
             for c in range(Game.NUM_COLUMNS) :
                 row.append(int(boardA[i]))
                 i = i + 1
-            Game.append(row)
+            board.append(row)
+        return board
 
-    def convertToString(board : List[List[BoardValue]]) -> string:
+    @staticmethod
+    def convertToString(board : List[List[int]]) -> str:
         return BoardConverter.SPLITTER.join(Utils.flatten(Game.board))
