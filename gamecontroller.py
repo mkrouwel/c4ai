@@ -1,3 +1,5 @@
+# Created by M. Krouwel
+# based on work by BDMarius https://github.com/bdmarius/nn-connect4
 import copy
 from typing import List, Tuple
 from game import Game
@@ -16,7 +18,7 @@ class GameController:
         self.bluePlayer = bluePlayer
         self.trainingHistory = []
 
-    def simulateManyGames(self, numberOfGames : int):
+    def simulateManyGames(self, numberOfGames : int, reportEvery : int):
         redPlayerWins : int = 0
         bluePlayerWins : int = 0
         draws : int = 0
@@ -29,7 +31,7 @@ class GameController:
                 bluePlayerWins = bluePlayerWins + 1
             else:
                 draws = draws + 1
-            if i % 100 == 0:
+            if i % reportEvery == 0:
                 print(i)
         totalWins = redPlayerWins + bluePlayerWins + draws
         print('Red Wins: ' + str(int(redPlayerWins * 100 / totalWins)) + '%')
@@ -40,8 +42,7 @@ class GameController:
         #print('playong')
         playerToMove = self.redPlayer
         while self.game.getGameResult() == Game.GAME_STATE_NOT_ENDED:
-            availableMoves = self.game.getAvailableMoves()
-            move : List[int] = playerToMove.getMove(availableMoves, self.game.board)
+            move : Tuple[int, int] = playerToMove.getMove(self.game.getAvailableMoves(), self.game.board)
             self.game.move(move, playerToMove)
             if playerToMove == self.redPlayer:
                 playerToMove = self.bluePlayer

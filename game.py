@@ -1,5 +1,8 @@
+# Created by M. Krouwel
+# based on work by BDMarius https://github.com/bdmarius/nn-connect4
 import copy
-from typing import List
+from os import stat
+from typing import List, Tuple
 from player import Player
 from utils import Utils
 
@@ -33,32 +36,48 @@ class Game:
         ] #[[copy.copy(Game.EMPTY_VAL)] * NUM_COLUMNS] * NUM_ROWS
         self.boardHistory = []
 
-    @staticmethod
-    def isValid(board : List[List[int]]) -> bool:
+    def isValid(self, currentPlayer : int) -> bool:
+        flattenedList : List[int] = Utils.flatten(self.board)
+        if len(list(filter(lambda v : v != Game.EMPTY_VAL and v != Game.BLUE_PLAYER_VAL and v != Game.RED_PLAYER_VAL, flattenedList))) > 0:
+            return False
+
         nonZeroFound : bool
         for c in range(Game.NUM_COLUMNS):
             nonZeroFound = False
             for r in range(Game.NUM_ROWS):
-                if board[r][c] == Game.BLUE_PLAYER_VAL or board[r][c] == Game.RED_PLAYER_VAL:
+                if self.board[r][c] == Game.BLUE_PLAYER_VAL or self.board[r][c] == Game.RED_PLAYER_VAL:
                     nonZeroFound = True
-                if nonZeroFound and board[r][c] == Game.EMPTY_VAL:
+                elif nonZeroFound and self.board[r][c] == Game.EMPTY_VAL:
                     return False
-        return True
+        
+        nrOfBlueStones : int = len(list(filter(lambda v : v == Game.BLUE_PLAYER_VAL, flattenedList)))
+        nrOfRedStones : int = len(list(filter(lambda v : v == Game.RED_PLAYER_VAL, flattenedList)))
 
-    def getAvailableMoves(self) -> List[List[int]]:
-        availableMoves : List[List[int]] = []
+        if nrOfBlueStones == nrOfRedStones:
+            return True
+
+        if currentPlayer == Game.RED_PLAYER_VAL:
+            return nrOfBlueStones == nrOfRedStones + 1
+
+        if currentPlayer == Game.BLUE_PLAYER_VAL:
+            return nrOfBlueStones + 1 == nrOfRedStones
+
+        return False
+
+    def getAvailableMoves(self) -> List[Tuple[int, int]]:
+        availableMoves : List[Tuple[int, int]] = []
         for c in range(Game.NUM_COLUMNS):
             if self.board[Game.NUM_ROWS - 1][c] == Game.EMPTY_VAL:
-                availableMoves.append([Game.NUM_ROWS - 1, c])
+                availableMoves.append((Game.NUM_ROWS - 1, c))
             else:
                 for r in range(Game.NUM_ROWS - 1):
                     if self.board[r][c] == Game.EMPTY_VAL and self.board[r + 1][c] != Game.EMPTY_VAL:
-                        availableMoves.append([r, c])
+                        availableMoves.append((r, c))
         return availableMoves
 
     def getGameResult(self) -> int:
         winnerFound : bool = False
-        currentWinner : int = None
+        currentWinner : int = Game.EMPTY_VAL
         # Find winner on horizontal
         for r in range(Game.NUM_ROWS):
             if not winnerFound:
@@ -114,6 +133,6 @@ class Game:
 
             return Game.GAME_STATE_NOT_ENDED
 
-    def move(self, move : List[int], player : Player):
+    def move(self, move : Tuple[int, int], player : Player):
         self.board[move[0]][move[1]] = player.getValue()
         self.boardHistory.append(copy.deepcopy(self.board))

@@ -1,16 +1,22 @@
-pip3 install keras
-pip3 install tensorflow
-pip3 install scikit-learn
+# Created by M. Krouwel
+# based on work by BDMarius https://github.com/bdmarius/nn-connect4
 
-Optional:
-pip install mypy
+Download and install python from e.g. https://www.python.org/downloads/
 
-(optional) check typings with
-    python -m mypy main.py
+Install required libraries:
+    pip3 install keras
+    pip3 install tensorflow
+    pip3 install scikit-learn
+
+(Optional) install check typings:
+    pip install mypy
+
+(optional) check typings:
+    python -m mypy train.py
     python -m mypy server.py
 
-Run trainer
-    python main.py
+(optional) Run trainer (model is provided in c4model/, will be overwritten with new training):
+    python train.py
 
 Run server 
     python server.py

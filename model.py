@@ -1,3 +1,5 @@
+# Created by M. Krouwel
+# based on work by BDMarius https://github.com/bdmarius/nn-connect4
 import numpy as np
 from keras.layers import Dense
 from keras.models import Sequential
@@ -41,4 +43,6 @@ class ConnectFourModel:
         self.model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=self.__epochs, batch_size=self.__batchSize)#, callbacks=[self.csv_logger])
 
     def predict(self, data, index):
-        return self.model.predict(np.array(data).reshape(-1, self.__numberOfInputs))[0][index]
+        a = self.model.predict(np.array(data).reshape(-1, self.__numberOfInputs))#, callbacks=[self.csv_logger])
+        print(a)
+        return a[0][index]

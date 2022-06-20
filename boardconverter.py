@@ -1,3 +1,4 @@
+# Created by M. Krouwel
 from game import Game
 from typing import List
 
