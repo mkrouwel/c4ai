@@ -27,7 +27,7 @@ class AB:
             avMovesWithValue.append((availableMove, score))
 
         avMovesWithValue.sort(key=Utils.takeSecond, reverse=True)
-        print(avMovesWithValue)
+        #print(avMovesWithValue)
         avMovesWithBestValue = [av for av in avMovesWithValue if Utils.takeSecond(av) == Utils.takeSecond(avMovesWithValue[0])]
         if len(avMovesWithBestValue) > 1: # multiple best moves, randomize!
             return Utils.takeFirst(avMovesWithBestValue[random.randrange(0, len(avMovesWithBestValue))])

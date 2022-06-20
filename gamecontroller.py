@@ -71,5 +71,5 @@ class GameController:
 
         for historyItem in self.__game.getBoardHistory():
             self.__trainingHistory.append((Utils.takeSecond(self.__game.getGameResult()), copy.deepcopy(historyItem)))
-        print(self.__game.getBoard())
+        #print(self.__game.getBoard())
         return result, winner
