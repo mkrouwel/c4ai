@@ -1,5 +1,5 @@
 # Created by M. Krouwel
-# based on work by BDMarius https://github.com/bdmarius/nn-connect4
+# based on work by Marius Borcan https://github.com/bdmarius/nn-connect4
 
 Download and install python from e.g. https://www.python.org/downloads/
 

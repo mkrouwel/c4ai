@@ -1,4 +1,5 @@
-#, callbacks=[self.csv_logger])
+# Created by M. Krouwel
+# based on work by Marius Borcan https://github.com/bdmarius/nn-connect4
 import random
 import copy
 from typing import List, Optional, Tuple, Any
@@ -26,8 +27,10 @@ class Player:
 
     def getMove(self, availableMoves : List[Tuple[int, int]], board : List[List[int]]) -> Tuple[int, int]:
         match(self.__strategy):
-            case PlayerStrategy.RANDOM | PlayerStrategy.AB:
+            case PlayerStrategy.RANDOM:
                 return availableMoves[random.randrange(0, len(availableMoves))]
+            case PlayerStrategy.AB:
+                return (0,0)
             case PlayerStrategy.MODEL:
                 avMovesWithValue : List[Tuple[Tuple[int, int], Any]]= []
                 if self.__model is not None:

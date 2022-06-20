@@ -1,6 +1,7 @@
 # Created by M. Krouwel
-# based on work by BDMarius https://github.com/bdmarius/nn-connect4
+# based on work by Marius Borcan https://github.com/bdmarius/nn-connect4
 import copy
+import random
 from typing import List, Tuple
 from game import Game
 from player import Player
@@ -39,8 +40,7 @@ class GameController:
         print('Draws: ' + str(int(draws * 100 / totalWins)) + '%')
 
     def playGame(self):
-        #print('playong')
-        playerToMove = self.redPlayer
+        playerToMove = self.redPlayer if random.randrange(0,2) == 0 else self.bluePlayer
         while self.game.getGameResult() == Game.GAME_STATE_NOT_ENDED:
             move : Tuple[int, int] = playerToMove.getMove(self.game.getAvailableMoves(), self.game.board)
             self.game.move(move, playerToMove)

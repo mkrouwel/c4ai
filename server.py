@@ -5,7 +5,7 @@ from boardconverter import BoardConverter
 from game import Game
 from player import Player
 from model import ConnectFourModel
-from tensorflow import keras
+from tensorflow import keras # type: ignore
 import urllib.parse as urlparse
 from typing import List
 from ailevel import AILevel
@@ -26,13 +26,12 @@ class handler(BaseHTTPRequestHandler):
         game : Game = Game()
         game.board = board        
         nextMove : Tuple[int, int]= (None,-1)
-        
-        if game.isValid(currentplayer):
-            #print('board valid!')
+
+        if game.isValid(currentplayer) and game.getGameResult() != Game.GAME_STATE_NOT_ENDED:
             p : Player = Player(currentplayer, PlayerStrategy.MODEL, level, model)
             nextMove = p.getMove(game.getAvailableMoves(), board)
         else:
-            print('board not valid')
+            print('board not valid or game already ended')
 
         responseText = str(Utils.takeSecond(nextMove)).encode("utf-8")
         self.send_response(200)

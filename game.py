@@ -1,8 +1,10 @@
 # Created by M. Krouwel
-# based on work by BDMarius https://github.com/bdmarius/nn-connect4
+# based on work by Marius Borcan https://github.com/bdmarius/nn-connect4
 import copy
 from os import stat
 from typing import List, Tuple
+
+import numpy as np
 from player import Player
 from utils import Utils
 
@@ -26,14 +28,7 @@ class Game:
         self.resetBoard()
     
     def resetBoard(self):
-        self.board = [
-            [Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL],
-            [Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL],
-            [Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL],
-            [Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL],
-            [Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL],
-            [Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL, Game.EMPTY_VAL]
-        ] #[[copy.copy(Game.EMPTY_VAL)] * NUM_COLUMNS] * NUM_ROWS
+        self.board = np.full((Game.NUM_ROWS, Game.NUM_COLUMNS), Game.EMPTY_VAL)
         self.boardHistory = []
 
     def isValid(self, currentPlayer : int) -> bool:

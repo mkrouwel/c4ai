@@ -1,10 +1,10 @@
 # Created by M. Krouwel
-# based on work by BDMarius https://github.com/bdmarius/nn-connect4
+# based on work by Marius Borcan https://github.com/bdmarius/nn-connect4
 import numpy as np
-from keras.layers import Dense
-from keras.models import Sequential
-from keras.utils import to_categorical
-from keras.callbacks import CSVLogger
+from keras.layers import Dense # type: ignore
+from keras.models import Sequential # type: ignore
+from keras.utils import to_categorical # type: ignore
+from keras.callbacks import CSVLogger # type: ignore
 
 class ConnectFourModel:
 
