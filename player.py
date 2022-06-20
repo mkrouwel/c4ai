@@ -1,10 +1,13 @@
 # Created by M. Krouwel
 # based on work by Marius Borcan https://github.com/bdmarius/nn-connect4
-import random
-import copy
-from typing import List, Optional, Tuple, Any
+from ast import AugAssign
+from typing import List, Optional, Tuple
+from AB import AB
 from ailevel import AILevel
 from model import ConnectFourModel
+import random
+from typing import List, Tuple
+from modelpredictor import ModelPredictor
 from playerstrategy import PlayerStrategy
 from utils import Utils
 
@@ -29,19 +32,21 @@ class Player:
         match(self.__strategy):
             case PlayerStrategy.RANDOM:
                 return availableMoves[random.randrange(0, len(availableMoves))]
+            case PlayerStrategy.MANUAL:
+                print(board)
+                movesForCol : List[Tuple[int, int]] = []
+                while len(movesForCol) == 0:
+                    col = int(input('Give column'))
+                    movesForCol = list(filter(lambda m : Utils.takeSecond(m) == col, availableMoves))
+                return movesForCol[0]
             case PlayerStrategy.AB:
-                return (0,0)
+                return AB.run(availableMoves, board, self.__value)
             case PlayerStrategy.MODEL:
-                avMovesWithValue : List[Tuple[Tuple[int, int], Any]]= []
                 if self.__model is not None:
-                    for availableMove in availableMoves:
-                        boardCopy : List[List[int]] = copy.deepcopy(board)
-                        boardCopy[availableMove[0]][availableMove[1]] = self.__value
-                        mvalue = self.__model.predict(boardCopy, self.__value)
-                        avMovesWithValue.append((availableMove, mvalue))
-                    
-                avMovesWithValue.sort(key=Utils.takeSecond, reverse=True)
-                return avMovesWithValue[min(self.__level.value, len(avMovesWithValue)-1)][0]
+                    return ModelPredictor.run(availableMoves, board, self.__value, self.__level, self.__model)
+                raise NotImplementedError("No model provided")
+            case _:
+                raise NotImplementedError("Not implemented")
 
     def getValue(self) -> int:
         return self.__value

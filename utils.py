@@ -1,5 +1,5 @@
 # Created by M. Krouwel
-from typing import Any, List, Tuple
+from typing import Any, Callable, List, Tuple
 
 class Utils:
 
@@ -8,11 +8,13 @@ class Utils:
         return [x for xs in xss for x in xs]
 
     @staticmethod
+    def filterEqual(xs : List[Any], c : Any) -> Any:
+        return [v for v in xs if v == c]
+
+    @staticmethod
     def takeFirst(t : Tuple) -> Any:
-        v, = t
-        return v
+        return t[0]
 
     @staticmethod
     def takeSecond(t : Tuple) -> Any:
-        _,v = t
-        return v
+        return t[1]

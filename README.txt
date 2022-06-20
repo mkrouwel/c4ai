@@ -18,5 +18,8 @@ Install required libraries:
 (optional) Run trainer (model is provided in c4model/, will be overwritten with new training):
     python train.py
 
-Run server 
+Run as command line game:
+    python main.py
+
+Run as server:
     python server.py

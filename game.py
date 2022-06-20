@@ -3,50 +3,68 @@
 import copy
 from os import stat
 from typing import List, Tuple
+from enum import Enum
 
 import numpy as np
-from player import Player
 from utils import Utils
 
+class GameState(Enum):
+    DRAW : int = 0
+    NOT_ENDED : int = -1
+    ENDED : int = 1
+
 class Game:
-
-    GAME_STATE_DRAW = -1
-    GAME_STATE_NOT_ENDED = -2
-    REQUIRED_SEQUENCE = 4
-
     NUM_ROWS : int = 6
     NUM_COLUMNS : int = 7
 
-    EMPTY_VAL = 0
-    BLUE_PLAYER_VAL = 1
-    RED_PLAYER_VAL = 2
+    EMPTY_VAL : int = 0
+    BLUE_PLAYER_VAL : int = 1
+    RED_PLAYER_VAL : int = -BLUE_PLAYER_VAL
 
-    board : List[List[int]]
-    boardHistory : List[List[List[int]]]
+    PLAYER_VALS : Tuple[int, int] = (BLUE_PLAYER_VAL, RED_PLAYER_VAL)
+    BOARD_VALS : List[int] = [EMPTY_VAL, BLUE_PLAYER_VAL, RED_PLAYER_VAL]
+
+    NR_TO_CONNECT : int = 4
+
+    __board : List[List[int]]
+    __boardHistory : List[List[List[int]]]
 
     def __init__(self):
         self.resetBoard()
     
     def resetBoard(self):
-        self.board = np.full((Game.NUM_ROWS, Game.NUM_COLUMNS), Game.EMPTY_VAL)
-        self.boardHistory = []
+        self.__board = np.full((Game.NUM_ROWS, Game.NUM_COLUMNS), Game.EMPTY_VAL)
+        self.__boardHistory = []
 
-    def isValid(self, currentPlayer : int) -> bool:
-        flattenedList : List[int] = Utils.flatten(self.board)
-        if len(list(filter(lambda v : v != Game.EMPTY_VAL and v != Game.BLUE_PLAYER_VAL and v != Game.RED_PLAYER_VAL, flattenedList))) > 0:
+    def getBoard(self) -> List[List[int]]:
+        return self.__board
+
+    def setBoard(self, board : List[List[int]]):
+        self.__board = board
+
+    def getBoardHistory(self) -> List[List[List[int]]]:
+        return self.__boardHistory
+
+    @staticmethod
+    def isValid(board: List[List[int]], currentPlayer : int) -> bool:
+        # check for invalid values
+        flattenedList : List[int] = Utils.flatten(board)
+        if len(list(filter(lambda v : v not in Game.BOARD_VALS, flattenedList))) > 0:
             return False
 
+        # check for non zero above zero
         nonZeroFound : bool
         for c in range(Game.NUM_COLUMNS):
             nonZeroFound = False
             for r in range(Game.NUM_ROWS):
-                if self.board[r][c] == Game.BLUE_PLAYER_VAL or self.board[r][c] == Game.RED_PLAYER_VAL:
+                if board[r][c] in Game.PLAYER_VALS:
                     nonZeroFound = True
-                elif nonZeroFound and self.board[r][c] == Game.EMPTY_VAL:
-                    return False
+                elif nonZeroFound and board[r][c] == Game.EMPTY_VAL:
+                    return False 
         
-        nrOfBlueStones : int = len(list(filter(lambda v : v == Game.BLUE_PLAYER_VAL, flattenedList)))
-        nrOfRedStones : int = len(list(filter(lambda v : v == Game.RED_PLAYER_VAL, flattenedList)))
+        # check current player
+        nrOfBlueStones : int = len(Utils.filterEqual(flattenedList, Game.BLUE_PLAYER_VAL))
+        nrOfRedStones : int = len(Utils.filterEqual(flattenedList, Game.RED_PLAYER_VAL))
 
         if nrOfBlueStones == nrOfRedStones:
             return True
@@ -60,74 +78,63 @@ class Game:
         return False
 
     def getAvailableMoves(self) -> List[Tuple[int, int]]:
+        return Game.sgetAvailableMoves(self.__board)
+
+    @staticmethod
+    def sgetAvailableMoves(board : List[List[int]]) -> List[Tuple[int, int]]:
         availableMoves : List[Tuple[int, int]] = []
         for c in range(Game.NUM_COLUMNS):
-            if self.board[Game.NUM_ROWS - 1][c] == Game.EMPTY_VAL:
+            if board[Game.NUM_ROWS - 1][c] == Game.EMPTY_VAL:
                 availableMoves.append((Game.NUM_ROWS - 1, c))
             else:
                 for r in range(Game.NUM_ROWS - 1):
-                    if self.board[r][c] == Game.EMPTY_VAL and self.board[r + 1][c] != Game.EMPTY_VAL:
+                    if board[r][c] == Game.EMPTY_VAL and board[r + 1][c] != Game.EMPTY_VAL:
                         availableMoves.append((r, c))
         return availableMoves
 
-    def getGameResult(self) -> int:
-        winnerFound : bool = False
-        currentWinner : int = Game.EMPTY_VAL
+    def getGameResult(self) -> Tuple[GameState, int]:
+        return Game.sgetGameResult(self.__board)
+
+    @staticmethod
+    def sgetGameResult(board : List[List[int]]) -> Tuple[GameState, int]:
         # Find winner on horizontal
         for r in range(Game.NUM_ROWS):
-            if not winnerFound:
-                for c in range(Game.NUM_COLUMNS - Game.REQUIRED_SEQUENCE - 1):
-                    if self.board[r][c] != Game.EMPTY_VAL and self.board[r][c] == self.board[r][c+1] and self.board[r][c] == self.board[r][c + 2] and \
-                            self.board[r][c] == self.board[r][c + 3]:
-                        currentWinner = self.board[r][c]
-                        winnerFound = True
+            for c in range(Game.NUM_COLUMNS - Game.NR_TO_CONNECT + 1):
+                #print('h', r, c, board[r][c], [board[r][c+i] for i in range(1,Game.NR_TO_CONNECT)])
+                if board[r][c] != Game.EMPTY_VAL and all([board[r][c+i] == board[r][c] for i in range(1,Game.NR_TO_CONNECT)]):
+                    #print('horizontal found', board)
+                    return (GameState.ENDED, board[r][c])
 
         # Find winner on vertical
-        if not winnerFound:
-            for c in range(Game.NUM_COLUMNS):
-                if not winnerFound:
-                    for r in range(Game.NUM_ROWS - Game.REQUIRED_SEQUENCE - 1):
-                        if self.board[r][c] != Game.EMPTY_VAL and self.board[r][c] == self.board[r+1][c] and self.board[r][c] == self.board[r+2][c] and \
-                                self.board[r][c] == self.board[r+3][c]:
-                            currentWinner = self.board[r][c]
-                            winnerFound = True
+        for c in range(Game.NUM_COLUMNS):
+            for r in range(Game.NUM_ROWS - Game.NR_TO_CONNECT + 1):
+                #print('v', r, c, board[r][c], [board[r+i][c] for i in range(1,Game.NR_TO_CONNECT)])
+                if board[r][c] != Game.EMPTY_VAL and all([board[r+i][c] == board[r][c] for i in range(1,Game.NR_TO_CONNECT)]):
+                    #print('vertical found', board)
+                    return (GameState.ENDED, board[r][c])
 
-        # Check lower left diagonals
-        if not winnerFound:
-            for i in range(Game.NUM_ROWS - Game.REQUIRED_SEQUENCE - 1):
-               j = 0
-               while j <= i:
-                   if self.board[i][j] != Game.EMPTY_VAL and self.board[i][i] == self.board[i + 1][j + 1] and self.board[i][i] == self.board[i + 2][j + 2] and \
-                           self.board[i][i] == self.board[i + 3][j + 3]:
-                       currentWinner = self.board[i][j]
-                       winnerFound = True
-                   j = j+1
+        # Check left diagonals
+        for r in range(Game.NUM_ROWS - Game.NR_TO_CONNECT + 1):
+            for c in range(Game.NUM_COLUMNS - Game.NR_TO_CONNECT + 1):
+                #print('l', r, c, board[r][c], [board[r+i][c+i] for i in range(1,Game.NR_TO_CONNECT)])
+                if board[r][c] != Game.EMPTY_VAL and all([board[r+i][c+i] == board[r][c] for i in range(1,Game.NR_TO_CONNECT)]):
+                    #print('left diagonal', board)
+                    return (GameState.ENDED, board[r][c])
 
-        # Check upper right diagonals
-        if not winnerFound:
-            for j in range(Game.NUM_COLUMNS - Game.REQUIRED_SEQUENCE - 1):
-                i = j
-                while i<= Game.NUM_ROWS - Game.REQUIRED_SEQUENCE - 1:
-                    if self.board[i][j] != Game.EMPTY_VAL and self.board[i][i] == self.board[i + 1][j + 1] and self.board[i][i] == self.board[i + 2][j + 2] and \
-                            self.board[i][i] == self.board[i + 3][j + 3]:
-                        currentWinner = self.board[i][j]
-                        winnerFound = True
-                    i = i+1
+        # Check right diagonals
+        for r in range(Game.NUM_ROWS - Game.NR_TO_CONNECT + 1):
+            for c in range(Game.NUM_COLUMNS - Game.NR_TO_CONNECT + 1):
+                #print('r', r, c, board[r+3][c], [board[r+3-i][c+i] for i in range(1,Game.NR_TO_CONNECT)])
+                if board[r+3][c] != Game.EMPTY_VAL and all([board[r+3-i][c+i] == board[r+3][c] for i in range(1,Game.NR_TO_CONNECT)]):
+                    #print('right diagonal', board)
+                    return (GameState.ENDED, board[r+3][c])
 
-        if winnerFound: return currentWinner
-        else:
-            # Check for draw 
-            #drawFound : bool = True
-            #for r in range(Game.NUM_ROWS):
-            #    for c in range(Game.NUM_COLUMNS):
-            #        if self.board[r][c] == Game.EMPTY_VAL:
-            #            drawFound = False
-            #if drawFound:
-            if len(list(filter(lambda v : v == Game.EMPTY_VAL, Utils.flatten(self.board)))) == 0:
-                return Game.GAME_STATE_DRAW  
+        # check for draw (no empty fields)
+        if len(list(filter(lambda v : v == Game.EMPTY_VAL, Utils.flatten(board)))) == 0:
+            return (GameState.DRAW, 0)
 
-            return Game.GAME_STATE_NOT_ENDED
+        return (GameState.NOT_ENDED, 0)
 
-    def move(self, move : Tuple[int, int], player : Player):
-        self.board[move[0]][move[1]] = player.getValue()
-        self.boardHistory.append(copy.deepcopy(self.board))
+    def move(self, move : Tuple[int, int], currentPlayerValue : int):
+        self.__board[move[0]][move[1]] = currentPlayerValue
+        self.__boardHistory.append(copy.deepcopy(self.__board))
