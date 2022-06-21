@@ -55,6 +55,12 @@ class Game:
         # check for invalid values
         flattenedList : List[int] = Utils.flatten(board)
         if len(list(filter(lambda v : v not in Game.BOARD_VALS, flattenedList))) > 0:
+            print('invalid value')
+            return False
+
+        # check player value
+        if currentPlayer not in Game.PLAYER_VALS:
+            print('not a valid player value')
             return False
 
         # check for non zero above zero
@@ -65,6 +71,7 @@ class Game:
                 if board[r][c] in Game.PLAYER_VALS:
                     nonZeroFound = True
                 elif nonZeroFound and board[r][c] == Game.EMPTY_VAL:
+                    print('zero after nonzer')
                     return False 
         
         # check current player
@@ -72,14 +79,18 @@ class Game:
         nrOfRedStones : int = len(Utils.filterEqual(flattenedList, Game.RED_PLAYER_VAL))
 
         if nrOfBlueStones == nrOfRedStones:
+            print('stones equal')
             return True
 
         if currentPlayer == Game.RED_PLAYER_VAL:
+            print(nrOfBlueStones == nrOfRedStones + 1)
             return nrOfBlueStones == nrOfRedStones + 1
 
         if currentPlayer == Game.BLUE_PLAYER_VAL:
+            print(nrOfBlueStones + 1 == nrOfRedStones)
             return nrOfBlueStones + 1 == nrOfRedStones
 
+        print('somehow ended up here...', currentPlayer)
         return False
 
     def getAvailableMoves(self) -> List[Tuple[int, int]]:

@@ -46,28 +46,23 @@ class ABSolver:
 
     @staticmethod
     def score_position(board : List[List[int]], currentPlayer : int) -> int:
-        #print('scoring', board)
         score : int = 0
         
         # score horizontal
-        #print('horizontal')
         for r in range(Game.NUM_ROWS):
             for c in range(Game.NUM_COLUMNS - Game.NR_TO_CONNECT + 1):
                 score += ABSolver.scoreSequence([board[r][c+i] for i in range(Game.NR_TO_CONNECT)], currentPlayer)
         
-        #print('vertical')
         # score vertical
         for c in range(Game.NUM_COLUMNS):
             for r in range(Game.NUM_ROWS - Game.NR_TO_CONNECT + 1):
                 score += ABSolver.scoreSequence([board[r+i][c] for i in range(Game.NR_TO_CONNECT)], currentPlayer)
 
-        #print('rd')
         # right diagonal
         for r in range(Game.NUM_ROWS - Game.NR_TO_CONNECT + 1):
             for c in range(Game.NUM_COLUMNS - Game.NR_TO_CONNECT + 1):
                 score += ABSolver.scoreSequence([board[r+i][c+i] for i in range(Game.NR_TO_CONNECT)], currentPlayer)
 
-        #print('ld')
         # left diagonal
         for r in range(Game.NUM_ROWS - Game.NR_TO_CONNECT + 1):
             for c in range(Game.NUM_COLUMNS - Game.NR_TO_CONNECT + 1):
@@ -80,14 +75,9 @@ class ABSolver:
         lc : int = len(Utils.filterEqual(sequence, currentPlayer))
         le : int = len(Utils.filterEqual(sequence, Game.EMPTY_VAL))
         lo : int = len(Utils.filterEqual(sequence, Game.getOtherPlayer(currentPlayer)))
-#        if lc == 4:
-#            return 100
-        #print(sequence)
         if lc == Game.NR_TO_CONNECT - 1 and le == 1:
-            #print('scored 10')
             return 10
         elif lc == Game.NR_TO_CONNECT - 2 and le == 2:
-            #print('scored 1')
             return 1
         elif lo == Game.NR_TO_CONNECT - 1 and le == 1:
             return -100

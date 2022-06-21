@@ -23,16 +23,19 @@ class handler(BaseHTTPRequestHandler):
 
     def processMove(self, params : Any):
         # parse params
-        currentplayer : int = int(params['currentplayer'][0])
+        f = lambda v : -1 if v == 2 else v
+        currentplayer : int = f(int(params['currentplayer'][0]))
         level : AILevel = AILevel(int(params['level'][0]))
-        board : List[List[int]] = BoardConverter.convertFromString(params['board'][0], Game.NUM_ROWS, Game.NUM_COLUMNS, lambda v : -1 if v == 2 else v)
-        
-        nextMove : Tuple[int, int] = (0,-1)
+        board : List[List[int]] = BoardConverter.convertFromString(params['board'][0], Game.NUM_ROWS, Game.NUM_COLUMNS, f)
+        solver : PlayerStrategy = PlayerStrategy(params['solver'][0])
+        print(board)
+        nextMove : Tuple[int, int] = (-1,-1)
 
         # check valid
         if Game.isValid(board, currentplayer) and Game.sgetGameResult(board) != GameState.NOT_ENDED:
-            p : Player = Player(currentplayer, PlayerStrategy.MODEL, level, model)
+            p : Player = Player(currentplayer, solver, level, model)
             nextMove = p.getMove(board)
+            print(nextMove)
         else:
             print('board not valid or game already ended')
 
