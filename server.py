@@ -11,7 +11,7 @@ from ailevel import AILevel
 from playerstrategy import PlayerStrategy
 from utils import Utils
 
-model = ConnectFourModel(42, 3, 50, 10)
+model = ConnectFourModel(Game.NUM_ROWS * Game.NUM_COLUMNS, 3, 50, 10)
 model.model = keras.models.load_model('./c4model')
 
 class handler(BaseHTTPRequestHandler):

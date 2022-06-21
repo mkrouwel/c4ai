@@ -75,7 +75,7 @@ class ABSolver:
         # left diagonal
         for r in range(Game.NUM_ROWS - Game.NR_TO_CONNECT + 1):
             for c in range(Game.NUM_COLUMNS - Game.NR_TO_CONNECT + 1):
-                score += ABSolver.scoreSequence([board[r+3-i][c+i] for i in range(Game.NR_TO_CONNECT)], currentPlayer)
+                score += ABSolver.scoreSequence([board[r+Game.NR_TO_CONNECT-1-i][c+i] for i in range(Game.NR_TO_CONNECT)], currentPlayer)
 
         return score
 

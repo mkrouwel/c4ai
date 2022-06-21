@@ -24,6 +24,7 @@ class Game:
     BOARD_VALS : List[int] = [EMPTY_VAL, BLUE_PLAYER_VAL, RED_PLAYER_VAL]
 
     NR_TO_CONNECT : int = 4
+    APPLY_GRAVITY : bool = True
 
     __board : List[List[int]]
     __boardHistory : List[List[List[int]]]
@@ -63,31 +64,32 @@ class Game:
             print('not a valid player value')
             return False
 
-        # check for non zero above zero
-        nonZeroFound : bool
-        for c in range(Game.NUM_COLUMNS):
-            nonZeroFound = False
-            for r in range(Game.NUM_ROWS):
-                if board[r][c] in Game.PLAYER_VALS:
-                    nonZeroFound = True
-                elif nonZeroFound and board[r][c] == Game.EMPTY_VAL:
-                    print('zero after nonzer')
-                    return False 
+        if Game.APPLY_GRAVITY:
+            # check for non zero above zero
+            nonZeroFound : bool
+            for c in range(Game.NUM_COLUMNS):
+                nonZeroFound = False
+                for r in range(Game.NUM_ROWS):
+                    if board[r][c] in Game.PLAYER_VALS:
+                        nonZeroFound = True
+                    elif nonZeroFound and board[r][c] == Game.EMPTY_VAL:
+                        print('zero after nonzer')
+                        return False 
         
         # check current player
         nrOfBlueStones : int = len(Utils.filterEqual(flattenedList, Game.BLUE_PLAYER_VAL))
         nrOfRedStones : int = len(Utils.filterEqual(flattenedList, Game.RED_PLAYER_VAL))
 
         if nrOfBlueStones == nrOfRedStones:
-            print('stones equal')
+            #print('stones equal')
             return True
 
         if currentPlayer == Game.RED_PLAYER_VAL:
-            print(nrOfBlueStones == nrOfRedStones + 1)
+            #print(nrOfBlueStones == nrOfRedStones + 1)
             return nrOfBlueStones == nrOfRedStones + 1
 
         if currentPlayer == Game.BLUE_PLAYER_VAL:
-            print(nrOfBlueStones + 1 == nrOfRedStones)
+            #print(nrOfBlueStones + 1 == nrOfRedStones)
             return nrOfBlueStones + 1 == nrOfRedStones
 
         print('somehow ended up here...', currentPlayer)
@@ -99,12 +101,18 @@ class Game:
     @staticmethod
     def sgetAvailableMoves(board : List[List[int]]) -> List[Tuple[int, int]]:
         availableMoves : List[Tuple[int, int]] = []
-        for c in range(Game.NUM_COLUMNS):
-            if board[Game.NUM_ROWS - 1][c] == Game.EMPTY_VAL:
-                availableMoves.append((Game.NUM_ROWS - 1, c))
-            else:
-                for r in range(Game.NUM_ROWS - 1):
-                    if board[r][c] == Game.EMPTY_VAL and board[r + 1][c] != Game.EMPTY_VAL:
+        if Game.APPLY_GRAVITY:
+            for c in range(Game.NUM_COLUMNS):
+                if board[Game.NUM_ROWS - 1][c] == Game.EMPTY_VAL:
+                    availableMoves.append((Game.NUM_ROWS - 1, c))
+                else:
+                    for r in range(Game.NUM_ROWS - 1):
+                        if board[r][c] == Game.EMPTY_VAL and board[r + 1][c] != Game.EMPTY_VAL:
+                            availableMoves.append((r, c))  
+        else:
+            for r in range(Game.NUM_ROWS):
+                for c in range(Game.NUM_COLUMNS):
+                    if board[r][c] == Game.EMPTY_VAL:
                         availableMoves.append((r, c))
         return availableMoves
 
@@ -141,9 +149,9 @@ class Game:
         for r in range(Game.NUM_ROWS - Game.NR_TO_CONNECT + 1):
             for c in range(Game.NUM_COLUMNS - Game.NR_TO_CONNECT + 1):
                 #print('r', r, c, board[r+3][c], [board[r+3-i][c+i] for i in range(1,Game.NR_TO_CONNECT)])
-                if board[r+3][c] != Game.EMPTY_VAL and all([board[r+3-i][c+i] == board[r+3][c] for i in range(1,Game.NR_TO_CONNECT)]):
+                if board[r+Game.NR_TO_CONNECT-1][c] != Game.EMPTY_VAL and all([board[r+Game.NR_TO_CONNECT-1-i][c+i] == board[r+Game.NR_TO_CONNECT-1][c] for i in range(1,Game.NR_TO_CONNECT)]):
                     #print('right diagonal', board)
-                    return (GameState.ENDED, board[r+3][c])
+                    return (GameState.ENDED, board[r+Game.NR_TO_CONNECT-1][c])
 
         # check for draw (no empty fields)
         if len(list(filter(lambda v : v == Game.EMPTY_VAL, Utils.flatten(board)))) == 0:

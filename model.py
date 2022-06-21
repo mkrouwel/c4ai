@@ -42,5 +42,5 @@ class ConnectFourModel:
 
     def predict(self, data, index):
         a = self.model.predict(np.array(data).reshape(-1, self.__numberOfInputs))#, callbacks=[self.csv_logger])
-        print(a)
+        #print('a: ', a)
         return a[0][index]
