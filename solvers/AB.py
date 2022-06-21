@@ -11,7 +11,7 @@ import random
 class ABSolver:
     @staticmethod
     def run(board : List[List[int]], currentPlayer : int, level : AILevel) -> Tuple[int, int]:
-        return Utils.takeFirst(ABSolver.minimax(board, currentPlayer, 3 - level.value, True, False, -inf, inf))
+        return Utils.takeFirst(ABSolver.minimax(board, currentPlayer, 3 - level.value, True, True, -inf, inf))
    
     @staticmethod
     def minimax(board : List[List[int]], currentPlayer : int, depth : int, maximizing : bool, useAB : bool, alpha : float, beta : float) -> Tuple[Tuple[int, int],float]:
@@ -40,13 +40,11 @@ class ABSolver:
             avMovesWithValue.append((availableMove, score))
             if useAB:
                 if maximizing:
-                    alpha = max(alpha, score)
-                    if score >= beta:
-                        break            
+                    alpha = max(alpha, score)            
                 else:
                     beta = min(beta, score)
-                    if score <= alpha:
-                        break     
+                if alpha >= beta:
+                    break     
              
         avMovesWithValue.sort(key=Utils.takeSecond, reverse=maximizing)
         #print(avMovesWithValue)
