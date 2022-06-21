@@ -22,23 +22,27 @@ if __name__ == "__main__":
     gameController.simulateManyGames(1000, 100)
 
     gameController.setPlayers(redABPlayer, blueRandomPlayer)
-    print ("Playing with with AB vs random strategies")
+    print ("Playing with AB vs random strategies")
     gameController.simulateManyGames(1000, 100)
 
     gameController.setPlayers(redABPlayer, blueABPlayer)
-    print ("Playing with with AB vs AB strategies")
+    print ("Playing with AB vs AB strategies")
     gameController.simulateManyGames(1000, 100)
 
-    model : ConnectFourModel = ConnectFourModel(42, 3, 50, 100)
+    model : ConnectFourModel = ConnectFourModel(42, 3, 50, 1000)
     model.train(gameController.getTrainingHistory())
     model.model.save('./c4model')
 
     redNeuralPlayer : Player = Player(Game.RED_PLAYER_VAL, PlayerStrategy.MODEL, model=model)
     blueNeuralPlayer : Player = Player(Game.BLUE_PLAYER_VAL, PlayerStrategy.MODEL, model=model)
 
-    gameController = GameController(Game(), redRandomPlayer, blueNeuralPlayer)
-    print ("Playing with blue player as Neural Network")
-    gameController.simulateManyGames(10, 100)
+    gameController.setPlayers(redRandomPlayer, blueNeuralPlayer)
+    print ("Playing with random vs NN")
+    gameController.simulateManyGames(100, 100)
+
+    gameController.setPlayers(redNeuralPlayer, blueABPlayer)
+    print ("Playing with NN vs AB")
+    gameController.simulateManyGames(100, 100)
 
 #    gameController = GameController(Game(), redNeuralPlayer, blueRandomPlayer)
 #    print("Playing with red player as Neural Network")
