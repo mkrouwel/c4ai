@@ -13,7 +13,7 @@ class Player:
     __strategy : PlayerStrategy
     __model : Optional[ConnectFourModel]
 
-    def __init__(self, value : int, strategy : PlayerStrategy = PlayerStrategy.RANDOM, level : AILevel = AILevel.MEDIUM, model : Optional[ConnectFourModel] = None):
+    def __init__(self, value : int, strategy : PlayerStrategy = PlayerStrategy.RANDOM, level : AILevel = AILevel.HARD, model : Optional[ConnectFourModel] = None):
         self.__value = value
         self.__strategy = strategy
         self.__model = model

@@ -1,6 +1,7 @@
 # Created by M. Krouwel
 # inspired by Keith Galli https://github.com/KeithGalli/Connect4-Python/blob/master/connect4.py
 import copy
+from math import inf
 from typing import List, Tuple
 from ailevel import AILevel
 from utils import Utils
@@ -10,10 +11,10 @@ import random
 class ABSolver:
     @staticmethod
     def run(board : List[List[int]], currentPlayer : int, level : AILevel) -> Tuple[int, int]:
-        return Utils.takeFirst(ABSolver.minimax(board, currentPlayer, 3 - level.value, True))
+        return Utils.takeFirst(ABSolver.minimax(board, currentPlayer, 3 - level.value, True, False, -inf, inf))
    
     @staticmethod
-    def minimax(board : List[List[int]], currentPlayer : int, depth : int, maximizing : bool) -> Tuple[Tuple[int, int],float]:
+    def minimax(board : List[List[int]], currentPlayer : int, depth : int, maximizing : bool, useAB : bool, alpha : float, beta : float) -> Tuple[Tuple[int, int],float]:
         result : GameState
         winner : int
 
@@ -30,13 +31,23 @@ class ABSolver:
             return ((-1,-1), ABSolver.score_position(board, currentPlayer))
         
         availableMoves : List[Tuple[int, int]] = Game.sgetAvailableMoves(board)
-        avMovesWithValue : List[Tuple[Tuple[int, int], int]] = []
+        avMovesWithValue : List[Tuple[Tuple[int, int], float]] = []
         
         for availableMove in availableMoves:
             boardCopy : List[List[int]] = copy.deepcopy(board)
             boardCopy[availableMove[0]][availableMove[1]] = currentPlayer if maximizing else Game.getOtherPlayer(currentPlayer)
-            avMovesWithValue.append((availableMove, Utils.takeSecond(ABSolver.minimax(boardCopy, currentPlayer, depth - 1, not maximizing))))
-        
+            score : float = Utils.takeSecond(ABSolver.minimax(boardCopy, currentPlayer, depth - 1, not maximizing, useAB, alpha, beta))
+            avMovesWithValue.append((availableMove, score))
+            if useAB:
+                if maximizing:
+                    alpha = max(alpha, score)
+                    if score >= beta:
+                        break            
+                else:
+                    beta = min(beta, score)
+                    if score <= alpha:
+                        break     
+             
         avMovesWithValue.sort(key=Utils.takeSecond, reverse=maximizing)
         #print(avMovesWithValue)
         avMovesWithBestValue = [av for av in avMovesWithValue if Utils.takeSecond(av) == Utils.takeSecond(avMovesWithValue[0])]
