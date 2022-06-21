@@ -64,7 +64,7 @@ class GameController:
         winner : int
         while result == GameState.NOT_ENDED:
             #print(self.__game.getBoard())
-            move : Tuple[int, int] = playerToMove.getMove(self.__game.getBoard())
+            move : Tuple[int, int] = playerToMove.getMove(self.__game.getGameSettings(), self.__game.getBoard())
             self.__game.move(move, playerToMove.getValue())
             if playerToMove == self.__redPlayer:
                 playerToMove = self.__bluePlayer

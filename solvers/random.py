@@ -2,10 +2,10 @@
 import random
 from typing import List, Tuple
 
-from game import Game
+from game import Game, GameSettings
 
 class RandomSolver:
     @staticmethod
-    def run(board : List[List[int]]) -> Tuple[int, int]:
-        availableMoves = Game.sgetAvailableMoves(board)
+    def run(gameSettings : GameSettings, board : List[List[int]]) -> Tuple[int, int]:
+        availableMoves = Game.sgetAvailableMoves(gameSettings, board)
         return availableMoves[random.randrange(0, len(availableMoves))]

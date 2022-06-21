@@ -1,13 +1,13 @@
 # Created by M. Krouwel
 from typing import List, Tuple
-from game import Game
+from game import Game, GameSettings
 from utils import Utils
 
 class ManualSolver:
     @staticmethod
-    def run(board : List[List[int]]) -> Tuple[int, int]:        
+    def run(gameSettings : GameSettings, board : List[List[int]]) -> Tuple[int, int]:        
         print(board)
-        availableMoves : List[Tuple[int, int]] = Game.sgetAvailableMoves(board)
+        availableMoves : List[Tuple[int, int]] = Game.sgetAvailableMoves(gameSettings, board)
         movesForInput : List[Tuple[int, int]] = []
         while len(movesForInput) == 0:
             try:

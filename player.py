@@ -2,6 +2,7 @@
 # based on work by Marius Borcan https://github.com/bdmarius/nn-connect4
 from typing import List, Optional, Tuple
 from enums import AILevel, PlayerStrategy
+from game import GameSettings
 from model import ConnectFourModel
 from solvers import AB, random, modelsolver, manual
 
@@ -22,17 +23,17 @@ class Player:
             self.__strategy = PlayerStrategy.RANDOM
             print('changing strategy, no model given')
 
-    def getMove(self, board : List[List[int]]) -> Tuple[int, int]:
+    def getMove(self, gameSettings : GameSettings, board : List[List[int]]) -> Tuple[int, int]:
         match(self.__strategy):
             case PlayerStrategy.RANDOM:
-                return random.RandomSolver.run(board)
+                return random.RandomSolver.run(gameSettings, board)
             case PlayerStrategy.MANUAL:
-                return manual.ManualSolver.run(board)
+                return manual.ManualSolver.run(gameSettings, board)
             case PlayerStrategy.AB:
-                return AB.ABSolver.run(board, self.__value, self.__level)
+                return AB.ABSolver.run(gameSettings, board, self.__value, self.__level)
             case PlayerStrategy.MODEL:
                 if self.__model is not None:
-                    return modelsolver.ModelSolver.run(board, self.__value, self.__level, self.__model)
+                    return modelsolver.ModelSolver.run(gameSettings, board, self.__value, self.__level, self.__model)
                 raise NotImplementedError("No model provided")
             case _:
                 raise NotImplementedError("Not implemented")

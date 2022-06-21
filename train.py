@@ -29,7 +29,7 @@ if __name__ == "__main__":
     print ("Playing with AB vs AB strategies")
     gameController.simulateManyGames(1000, 100)
 
-    model : ConnectFourModel = ConnectFourModel(Game.NUM_ROWS * Game.NUM_COLUMNS, 3, 50, 1000)
+    model : ConnectFourModel = ConnectFourModel(gameSettings.numRows * gameSettings.numCols, 3, 50, 1000)
     model.train(gameController.getTrainingHistory())
     model.model.save('./c4model')
 
