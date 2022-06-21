@@ -69,6 +69,14 @@ class Game:
             print('not a valid player value')
             return False
 
+        # check dimenions
+        if gameSettings.numRows < 3 or gameSettings.numCols < 3 or gameSettings.nrToConnect < 3:
+            print('dimensions to small to play')
+            return False
+        if gameSettings.nrToConnect > min(gameSettings.numRows, gameSettings.numCols):
+            print('nrToConnect to big for board')
+            return False
+
         if gameSettings.applyGravity:
             # check for non zero above zero
             nonZeroFound : bool
