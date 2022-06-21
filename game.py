@@ -1,7 +1,6 @@
 # Created by M. Krouwel
-# based on work by Marius Borcan https://github.com/bdmarius/nn-connect4
+# inspired by Marius Borcan https://github.com/bdmarius/nn-connect4 and Keith Galli https://github.com/KeithGalli/Connect4-Python/blob/master/connect4.py
 import copy
-from os import stat
 from typing import List, Tuple
 from enum import Enum
 
@@ -44,6 +43,12 @@ class Game:
 
     def getBoardHistory(self) -> List[List[List[int]]]:
         return self.__boardHistory
+
+    @staticmethod
+    def getOtherPlayer(currentPlayer : int) -> int:
+        if currentPlayer in Game.PLAYER_VALS:
+            return Game.RED_PLAYER_VAL if currentPlayer == Game.BLUE_PLAYER_VAL else Game.BLUE_PLAYER_VAL
+        return 0
 
     @staticmethod
     def isValid(board: List[List[int]], currentPlayer : int) -> bool:

@@ -23,6 +23,8 @@ class GameController:
         return self.__trainingHistory
 
     def setPlayers(self, redPlayer : Player, bluePlayer : Player):
+        if redPlayer.getValue() == bluePlayer.getValue():
+            raise ValueError('players should not have same value')
         self.__redPlayer = redPlayer
         self.__bluePlayer = bluePlayer
         
@@ -61,7 +63,7 @@ class GameController:
         winner : int
         while result == GameState.NOT_ENDED:
             #print(self.__game.getBoard())
-            move : Tuple[int, int] = playerToMove.getMove(self.__game.getAvailableMoves(), self.__game.getBoard())
+            move : Tuple[int, int] = playerToMove.getMove(self.__game.getBoard())
             self.__game.move(move, playerToMove.getValue())
             if playerToMove == self.__redPlayer:
                 playerToMove = self.__bluePlayer

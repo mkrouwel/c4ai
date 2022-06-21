@@ -28,6 +28,10 @@ if __name__ == "__main__":
     print ("Playing with with AB vs random strategies")
     gameController.simulateManyGames(1000, 100)
 
+    gameController.setPlayers(redABPlayer, blueABPlayer)
+    print ("Playing with with AB vs AB strategies")
+    gameController.simulateManyGames(1000, 100)
+
     model : ConnectFourModel = ConnectFourModel(42, 3, 50, 100)
     #t : List[Tuple[int, List[List[int]]]] = gameController1.getTrainingHistory()
     #t.extend(gameController2.getTrainingHistory())
@@ -39,7 +43,7 @@ if __name__ == "__main__":
 
     gameController = GameController(Game(), redRandomPlayer, blueNeuralPlayer)
     print ("Playing with blue player level Hard as Neural Network")
-    gameController.simulateManyGames(1000, 100)
+    gameController.simulateManyGames(10, 100)
 
     #gameController = GameController(Game(), redRandomPlayer, Player(Game.BLUE_PLAYER_VAL, PlayerStrategy.MODEL, model))
     #print ("Playing with blue player level Medium as Neural Network")

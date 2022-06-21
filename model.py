@@ -9,13 +9,11 @@ from keras.callbacks import CSVLogger # type: ignore
 class ConnectFourModel:
 
     __numberOfInputs : int
-    __numberOfOutputs : int
     __batchSize : int
     __epochs : int
 
     def __init__(self, numberOfInputs : int, numberOfOutputs : int, batchSize : int, epochs : int):
         self.__numberOfInputs = numberOfInputs
-        self.__numberOfOutputs = numberOfOutputs
         self.__batchSize = batchSize
         self.__epochs = epochs
         self.model : Sequential = Sequential()

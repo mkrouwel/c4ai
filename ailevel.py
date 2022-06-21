@@ -1,3 +1,4 @@
+# Created by M. Krouwel
 from enum import Enum
 
 class AILevel(Enum):
