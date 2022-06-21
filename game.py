@@ -2,29 +2,22 @@
 # inspired by Marius Borcan https://github.com/bdmarius/nn-connect4 and Keith Galli https://github.com/KeithGalli/Connect4-Python/blob/master/connect4.py
 import copy
 from typing import List, Tuple
-from enum import Enum
-
 import numpy as np
 from utils import Utils
 
-class GameState(Enum):
-    DRAW : int = 0
-    NOT_ENDED : int = -1
-    ENDED : int = 1
-
 class Game:
-    NUM_ROWS : int = 6
-    NUM_COLUMNS : int = 7
+    __NUM_ROWS : int = 6
+    __NUM_COLUMNS : int = 7
 
-    EMPTY_VAL : int = 0
-    BLUE_PLAYER_VAL : int = 1
-    RED_PLAYER_VAL : int = -BLUE_PLAYER_VAL
+    __EMPTY_VAL : int = 0
+    __BLUE_PLAYER_VAL : int = 1
+    __RED_PLAYER_VAL : int = -BLUE_PLAYER_VAL
 
-    PLAYER_VALS : Tuple[int, int] = (BLUE_PLAYER_VAL, RED_PLAYER_VAL)
-    BOARD_VALS : List[int] = [EMPTY_VAL, BLUE_PLAYER_VAL, RED_PLAYER_VAL]
+    __PLAYER_VALS : Tuple[int, int] = (BLUE_PLAYER_VAL, RED_PLAYER_VAL)
+    __BOARD_VALS : List[int] = [EMPTY_VAL, BLUE_PLAYER_VAL, RED_PLAYER_VAL]
 
-    NR_TO_CONNECT : int = 4
-    APPLY_GRAVITY : bool = True
+    __NR_TO_CONNECT : int = 4
+    __APPLY_GRAVITY : bool = True
 
     __board : List[List[int]]
     __boardHistory : List[List[List[int]]]

@@ -3,7 +3,7 @@ import copy
 from game import Game
 from utils import Utils
 from typing import List, Any, Tuple
-from ailevel import AILevel
+from enums import AILevel
 from model import ConnectFourModel
 
 class ModelSolver:

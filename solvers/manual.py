@@ -3,7 +3,6 @@ from typing import List, Tuple
 from game import Game
 from utils import Utils
 
-
 class ManualSolver:
     @staticmethod
     def run(board : List[List[int]]) -> Tuple[int, int]:        

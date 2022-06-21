@@ -4,7 +4,7 @@ from game import Game
 from player import  Player
 from gamecontroller import GameController
 from model import ConnectFourModel
-from playerstrategy import PlayerStrategy
+from enums import PlayerStrategy
 
 if __name__ == "__main__":
     redRandomPlayer : Player = Player(Game.RED_PLAYER_VAL)

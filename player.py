@@ -1,9 +1,8 @@
 # Created by M. Krouwel
 # based on work by Marius Borcan https://github.com/bdmarius/nn-connect4
 from typing import List, Optional, Tuple
-from ailevel import AILevel
+from enums import AILevel, PlayerStrategy
 from model import ConnectFourModel
-from playerstrategy import PlayerStrategy
 from solvers import AB, random, modelsolver, manual
 
 class Player:

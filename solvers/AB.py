@@ -3,9 +3,9 @@
 import copy
 from math import inf
 from typing import List, Tuple
-from ailevel import AILevel
+from enums import AILevel, GameState
 from utils import Utils
-from game import Game, GameState
+from game import Game
 import random
 
 class ABSolver:

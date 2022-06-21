@@ -1,6 +1,5 @@
 # Created by M. Krouwel
 from typing import List
-
 from utils import Utils
 
 class BoardConverter:

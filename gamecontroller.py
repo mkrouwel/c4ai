@@ -3,7 +3,8 @@
 import copy
 import random
 from typing import List, Tuple
-from game import Game, GameState
+from game import Game
+from enums import GameState
 from player import Player
 from utils import Utils
 

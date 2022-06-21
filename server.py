@@ -1,14 +1,13 @@
 # Created by M. Krouwel
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from boardconverter import BoardConverter
-from game import Game, GameState
+from game import Game
 from player import Player
 from model import ConnectFourModel
 from tensorflow import keras # type: ignore
 import urllib.parse as urlparse
 from typing import Any, List, Tuple
-from ailevel import AILevel
-from playerstrategy import PlayerStrategy
+from enums import AILevel, PlayerStrategy, GameState
 from utils import Utils
 
 model = ConnectFourModel(Game.NUM_ROWS * Game.NUM_COLUMNS, 3, 50, 10)

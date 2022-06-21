@@ -4,8 +4,7 @@ from boardconverter import BoardConverter
 from game import Game
 from gamecontroller import GameController
 from player import Player
-
-from playerstrategy import PlayerStrategy
+from enums import PlayerStrategy
 
 if __name__ == "__main__":
     #board : List[List[int]] = BoardConverter.convertFromString('0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-2-1-2-1-0', Game.NUM_ROWS, Game.NUM_COLUMNS, lambda v : -1 if v == 2 else v)
