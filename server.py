@@ -32,7 +32,7 @@ class handler(BaseHTTPRequestHandler):
         # check valid
         if Game.isValid(board, currentplayer) and Game.sgetGameResult(board) != GameState.NOT_ENDED:
             p : Player = Player(currentplayer, PlayerStrategy.MODEL, level, model)
-            nextMove = p.getMove(Game.sgetAvailableMoves(board), board)
+            nextMove = p.getMove(board)
         else:
             print('board not valid or game already ended')
 
