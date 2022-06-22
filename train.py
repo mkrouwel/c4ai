@@ -13,30 +13,30 @@ if __name__ == "__main__":
     redABPlayer : Player = Player(Game.RED_PLAYER_VAL, PlayerStrategy.AB)
     blueABPlayer : Player = Player(Game.BLUE_PLAYER_VAL, PlayerStrategy.AB)
 
-    for numRows in range(3,8):
-        for numCols in range(3,8):
-            for nrToConnect in range(3, min(numRows, numCols) + 1):
-                for applyGravity in [True, False]:
+    for numRows in range(6,7):
+        for numCols in range(7,8):
+            for nrToConnect in range(4,5): #3, min(numRows, numCols) + 1):
+                for applyGravity in [True]:
                     print(numRows, numCols, nrToConnect, applyGravity)
                     gameController : GameController = GameController(Game(GameSettings(numRows, numCols, nrToConnect, applyGravity)), redRandomPlayer, blueRandomPlayer)
                     print ("Playing with random vs random strategies")
+                    gameController.simulateManyGames(1000, 100)
+
+                    gameController.setPlayers(redRandomPlayer, blueABPlayer)
+                    print ("Playing with random vs AB strategies")
                     gameController.simulateManyGames(100, 100)
 
-#                    gameController.setPlayers(redRandomPlayer, blueABPlayer)
-#                    print ("Playing with random vs AB strategies")
-#                    gameController.simulateManyGames(100, 100)
+                    gameController.setPlayers(redABPlayer, blueRandomPlayer)
+                    print ("Playing with AB vs random strategies")
+                    gameController.simulateManyGames(100, 100)
 
-#                    gameController.setPlayers(redABPlayer, blueRandomPlayer)
-#                    print ("Playing with AB vs random strategies")
-#                    gameController.simulateManyGames(100, 100)
+                    gameController.setPlayers(redABPlayer, blueABPlayer)
+                    print ("Playing with AB vs AB strategies")
+                    gameController.simulateManyGames(100, 100)
 
-#                    gameController.setPlayers(redABPlayer, blueABPlayer)
-#                    print ("Playing with AB vs AB strategies")
-#                    gameController.simulateManyGames(100, 100)
-
-#    model : ConnectFourModel = ConnectFourModel(42, 3, 50, 1000) #TODO: get game dimensions, maybe iterate over to support multiple models?
-#    model.train(gameController.getTrainingHistory())
-#    model.model.save('./c4model')
+                    model : ConnectFourModel = ConnectFourModel(numRows * numCols, 3, 50, 100)
+                    model.train(gameController.getTrainingHistory())
+                    model.model.save(f'./model_{numRows}x{numCols}_{nrToConnect}_{applyGravity}')
 
 #    redNeuralPlayer : Player = Player(Game.RED_PLAYER_VAL, PlayerStrategy.MODEL, model=model)
 #    blueNeuralPlayer : Player = Player(Game.BLUE_PLAYER_VAL, PlayerStrategy.MODEL, model=model)
