@@ -1,13 +1,11 @@
 # Created by M. Krouwel
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from multiprocessing.sharedctypes import Value
 from pathlib import Path
 from NN import NN
 from boardconverter import BoardConverter
 from game import Game, GameSettings
 from player import Player
 from model import ConnectFourModel
-from tensorflow import keras # type: ignore
 import urllib.parse as urlparse
 from typing import Any, List, Optional, Tuple
 from enums import AILevel, PlayerStrategy, GameState
@@ -73,7 +71,7 @@ class handler(BaseHTTPRequestHandler):
             path = Path(modelPath)
             if path.exists() and path.is_dir():
                 model = ConnectFourModel(numRows * numCols, 3, 50)
-                model.model = keras.models.load_model(modelPath)
+                model.load(modelPath)
             else:
                 self.sendError(f'error: {modelPath} not found as model')
                 return

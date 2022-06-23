@@ -5,22 +5,24 @@ from keras.layers import Dense # type: ignore
 from keras.models import Sequential # type: ignore
 from keras.utils import to_categorical # type: ignore
 from keras.callbacks import CSVLogger # type: ignore
+from tensorflow import keras # type: ignore
 
 class ConnectFourModel:
 
     __numberOfInputs : int
     __numberOfOutputs : int
     __batchSize : int
+    __model : Sequential
 
     def __init__(self, numberOfInputs : int, numberOfOutputs : int, batchSize : int):
         self.__numberOfInputs = numberOfInputs
         self.__numberOfOutputs = numberOfOutputs
         self.__batchSize = batchSize
-        self.model : Sequential = Sequential()
-        self.model.add(Dense(numberOfInputs, activation='relu', input_shape=(numberOfInputs,)))
-        self.model.add(Dense(numberOfInputs, activation='relu'))
-        self.model.add(Dense(numberOfOutputs, activation='softmax'))
-        self.model.compile(loss='categorical_crossentropy', optimizer="rmsprop", metrics=['accuracy'])
+        self.__model = Sequential()
+        self.__model.add(Dense(numberOfInputs, activation='relu', input_shape=(numberOfInputs,)))
+        self.__model.add(Dense(numberOfInputs, activation='relu'))
+        self.__model.add(Dense(numberOfOutputs, activation='softmax'))
+        self.__model.compile(loss='categorical_crossentropy', optimizer="rmsprop", metrics=['accuracy'])
         #self.csv_logger = CSVLogger('log.csv', append=True, separator=';')
 
     def train(self, dataset, iterations : int):
@@ -39,9 +41,15 @@ class ConnectFourModel:
         y_train = y[:limit]
         y_test = y[limit:]
         
-        self.model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=iterations, batch_size=self.__batchSize)#, callbacks=[self.csv_logger])
+        self.__model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=iterations, batch_size=self.__batchSize)#, callbacks=[self.csv_logger])
 
     def predict(self, data, index):
-        a = self.model.predict(np.array(data).reshape(-1, self.__numberOfInputs))#, callbacks=[self.csv_logger])
+        a = self.__model.predict(np.array(data).reshape(-1, self.__numberOfInputs))#, callbacks=[self.csv_logger])
         #print('a: ', a)
         return a[0][index]
+
+    def save(self, path : str):
+        self.__model.save(path)
+
+    def load(self, path : str):
+        self.__model = keras.models.load_model(path)

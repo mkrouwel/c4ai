@@ -25,7 +25,7 @@ class NN:
     def __sigmoid_derivative(x):
         return x * (1 - x)
 
-    def train(self, dataset, iterations : int):
+    def train(self, dataset, iterations : int, reportEvery : int):
         input = []
         output = np.zeros((len(dataset), self.__numberOfOutputs))
 
@@ -36,7 +36,7 @@ class NN:
         X = np.array(input).reshape((-1, self.__numberOfInputs))
         #Y = to_categorical(output, num_classes=self.__numberOfOutputs)
 
-        for _ in range(iterations):
+        for i in range(iterations):
             # Pass the training set through our neural network (a single neuron).
             NNguess = self.__think(X)
             #print(NNguess)
@@ -53,6 +53,9 @@ class NN:
 
             # Adjust the weights.
             self.__synaptic_weights += adjustment
+
+            if i%reportEvery == 0:
+                print(i)
 
     def __think(self, data):
         return self.__sigmoid(np.dot(np.array(data).reshape(-1, self.__numberOfInputs), self.__synaptic_weights))
