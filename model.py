@@ -9,10 +9,12 @@ from keras.callbacks import CSVLogger # type: ignore
 class ConnectFourModel:
 
     __numberOfInputs : int
+    __numberOfOutputs : int
     __batchSize : int
 
     def __init__(self, numberOfInputs : int, numberOfOutputs : int, batchSize : int):
         self.__numberOfInputs = numberOfInputs
+        self.__numberOfOutputs = numberOfOutputs
         self.__batchSize = batchSize
         self.model : Sequential = Sequential()
         self.model.add(Dense(numberOfInputs, activation='relu', input_shape=(numberOfInputs,)))
@@ -29,7 +31,8 @@ class ConnectFourModel:
             output.append(data[0])
 
         X = np.array(input).reshape((-1, self.__numberOfInputs))
-        y = to_categorical(output, num_classes=3)
+        y = to_categorical(output, num_classes=self.__numberOfOutputs)
+        print(y)
         limit = int(0.8 * len(X))
         X_train = X[:limit]
         X_test = X[limit:]

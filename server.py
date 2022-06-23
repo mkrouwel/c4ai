@@ -2,6 +2,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from multiprocessing.sharedctypes import Value
 from pathlib import Path
+from NN import NN
 from boardconverter import BoardConverter
 from game import Game, GameSettings
 from player import Player
@@ -64,13 +65,24 @@ class handler(BaseHTTPRequestHandler):
             return
         
         # load model
-        model : Optional[ConnectFourModel] = None
+        model : Optional[ConnectFourModel | NN] = None
+        modelPath : str
+        path : Path
         if solver == PlayerStrategy.MODEL:
-            modelPath : str = f'./model_{numRows}x{numCols}_{nrToConnect}_{applyGravity}'
-            p = Path(modelPath)
-            if p.exists() and p.is_dir():
-                model = ConnectFourModel(numRows * numCols, 3, 50, 100)
+            modelPath = f'./model_{numRows}x{numCols}_{nrToConnect}_{applyGravity}'
+            path = Path(modelPath)
+            if path.exists() and path.is_dir():
+                model = ConnectFourModel(numRows * numCols, 3, 50)
                 model.model = keras.models.load_model(modelPath)
+            else:
+                self.sendError(f'error: {modelPath} not found as model')
+                return
+        elif solver == PlayerStrategy.NN:
+            modelPath = f'./nn/nn_{numRows}x{numCols}_{nrToConnect}_{applyGravity}.csv'
+            path = Path(modelPath)
+            if path.exists() and path.is_file():
+                model = NN(numRows * numCols, 3)
+                model.load(modelPath)
             else:
                 self.sendError(f'error: {modelPath} not found as model')
                 return
@@ -81,8 +93,8 @@ class handler(BaseHTTPRequestHandler):
 
         # check valid
         if Game.isValid(gameSettings, board, currentplayer) and Game.sgetGameResult(gameSettings, board) != GameState.NOT_ENDED:
-            p : Player = Player(currentplayer, solver, level, model)
-            nextMove = p.getMove(gameSettings, board)
+            player : Player = Player(currentplayer, solver, level, model)
+            nextMove = player.getMove(gameSettings, board)
             print(nextMove)
         else:
             self.sendError('board not valid or game already ended')
