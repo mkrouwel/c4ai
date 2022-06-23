@@ -10,12 +10,10 @@ class ConnectFourModel:
 
     __numberOfInputs : int
     __batchSize : int
-    __epochs : int
 
-    def __init__(self, numberOfInputs : int, numberOfOutputs : int, batchSize : int, epochs : int):
+    def __init__(self, numberOfInputs : int, numberOfOutputs : int, batchSize : int):
         self.__numberOfInputs = numberOfInputs
         self.__batchSize = batchSize
-        self.__epochs = epochs
         self.model : Sequential = Sequential()
         self.model.add(Dense(numberOfInputs, activation='relu', input_shape=(numberOfInputs,)))
         self.model.add(Dense(numberOfInputs, activation='relu'))
@@ -23,7 +21,7 @@ class ConnectFourModel:
         self.model.compile(loss='categorical_crossentropy', optimizer="rmsprop", metrics=['accuracy'])
         #self.csv_logger = CSVLogger('log.csv', append=True, separator=';')
 
-    def train(self, dataset):
+    def train(self, dataset, iterations : int):
         input = []
         output = []
         for data in dataset:
@@ -38,7 +36,7 @@ class ConnectFourModel:
         y_train = y[:limit]
         y_test = y[limit:]
         
-        self.model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=self.__epochs, batch_size=self.__batchSize)#, callbacks=[self.csv_logger])
+        self.model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=iterations, batch_size=self.__batchSize)#, callbacks=[self.csv_logger])
 
     def predict(self, data, index):
         a = self.model.predict(np.array(data).reshape(-1, self.__numberOfInputs))#, callbacks=[self.csv_logger])

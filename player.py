@@ -29,12 +29,16 @@ class Player:
                 return random.RandomSolver.run(gameSettings, board)
             case PlayerStrategy.MANUAL:
                 return manual.ManualSolver.run(gameSettings, board)
+            case PlayerStrategy.MINIMAX:
+                return AB.ABSolver.run(gameSettings, board, self.__value, self.__level, False)
             case PlayerStrategy.AB:
-                return AB.ABSolver.run(gameSettings, board, self.__value, self.__level)
+                return AB.ABSolver.run(gameSettings, board, self.__value, self.__level, True)
+            case PlayerStrategy.NN:
+                return
             case PlayerStrategy.MODEL:
                 if self.__model is not None:
                     return modelsolver.ModelSolver.run(gameSettings, board, self.__value, self.__level, self.__model)
-                raise NotImplementedError("No model provided")
+                raise ValueError("No model provided")
             case _:
                 raise NotImplementedError("Not implemented")
 

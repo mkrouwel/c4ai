@@ -16,3 +16,5 @@ class PlayerStrategy(Enum):
     MODEL = 'MODEL'
     AB = 'AB'
     MANUAL = 'MANUAL'
+    MINIMAX = 'MINIMAX'
+    NN = 'NN'

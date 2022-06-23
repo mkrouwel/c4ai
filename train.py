@@ -1,5 +1,7 @@
 # Created by M. Krouwel
 # based on work by Marius Borcan https://github.com/bdmarius/nn-connect4
+from NN import NN
+from boardconverter import BoardConverter
 from game import Game, GameSettings
 from player import  Player
 from gamecontroller import GameController
@@ -22,21 +24,26 @@ if __name__ == "__main__":
                     print ("Playing with random vs random strategies")
                     gameController.simulateManyGames(1000, 100)
 
-                    gameController.setPlayers(redRandomPlayer, blueABPlayer)
-                    print ("Playing with random vs AB strategies")
-                    gameController.simulateManyGames(100, 100)
+                    #gameController.setPlayers(redRandomPlayer, blueABPlayer)
+                    #print ("Playing with random vs AB strategies")
+                    #gameController.simulateManyGames(100, 100)
 
-                    gameController.setPlayers(redABPlayer, blueRandomPlayer)
-                    print ("Playing with AB vs random strategies")
-                    gameController.simulateManyGames(100, 100)
+                    #gameController.setPlayers(redABPlayer, blueRandomPlayer)
+                    #print ("Playing with AB vs random strategies")
+                    #gameController.simulateManyGames(100, 100)
 
-                    gameController.setPlayers(redABPlayer, blueABPlayer)
-                    print ("Playing with AB vs AB strategies")
-                    gameController.simulateManyGames(100, 100)
+                    #gameController.setPlayers(redABPlayer, blueABPlayer)
+                    #print ("Playing with AB vs AB strategies")
+                    #gameController.simulateManyGames(100, 100)
 
-                    model : ConnectFourModel = ConnectFourModel(numRows * numCols, 3, 50, 100)
-                    model.train(gameController.getTrainingHistory())
-                    model.model.save(f'./model_{numRows}x{numCols}_{nrToConnect}_{applyGravity}')
+                    #model : ConnectFourModel = ConnectFourModel(numRows * numCols, 3, 50)
+                    #model.train(gameController.getTrainingHistory(), 100)
+                    #model.model.save(f'./model_{numRows}x{numCols}_{nrToConnect}_{applyGravity}')
+                    nn = NN(numRows * numCols, 1)
+                    nn.train(gameController.getTrainingHistory(), 1000)
+                    print(nn.getSW()) #TODO somehow save this to disk?!
+
+                    #print(nn.think(BoardConverter.convertFromString('0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-2-2-2-1-1-1', numRows, numCols, lambda v : -1 if v == 2 else v)))
 
 #    redNeuralPlayer : Player = Player(Game.RED_PLAYER_VAL, PlayerStrategy.MODEL, model=model)
 #    blueNeuralPlayer : Player = Player(Game.BLUE_PLAYER_VAL, PlayerStrategy.MODEL, model=model)

@@ -63,7 +63,6 @@ class GameController:
         result : GameState = GameState.NOT_ENDED
         winner : int
         while result == GameState.NOT_ENDED:
-            #print(self.__game.getBoard())
             move : Tuple[int, int] = playerToMove.getMove(self.__game.getGameSettings(), self.__game.getBoard())
             self.__game.move(move, playerToMove.getValue())
             if playerToMove == self.__redPlayer:
@@ -72,7 +71,8 @@ class GameController:
                 playerToMove = self.__redPlayer
             result, winner = self.__game.getGameResult()
 
+        historyItem : List[List[int]]
         for historyItem in self.__game.getBoardHistory():
             self.__trainingHistory.append((Utils.takeSecond(self.__game.getGameResult()), copy.deepcopy(historyItem)))
-        #print(self.__game.getBoard())
+
         return result, winner

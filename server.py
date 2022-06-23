@@ -89,7 +89,10 @@ class handler(BaseHTTPRequestHandler):
             return
 
         # send result
-        self.sendResponse(200, str(Utils.takeSecond(nextMove)))
+        if applyGravity:
+            self.sendResponse(200, str(Utils.takeSecond(nextMove)))
+        else:
+            self.sendResponse(200, str(Utils.takeFirst(nextMove)) + ',' + str(Utils.takeSecond(nextMove)))
 
     def sendResponse(self, code : int, message : str):
         messageEncoded : bytes = message.encode("utf-8")
