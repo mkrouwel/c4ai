@@ -58,7 +58,7 @@ class handler(BaseHTTPRequestHandler):
             return
         try:
             board : List[List[int]] = BoardConverter.convertFromString(params['board'][0], numRows, numCols, f)
-        except (ValueError, KeyError):
+        except (ValueError, KeyError, IndexError):
             self.sendError('error: board not valid')
             return
         

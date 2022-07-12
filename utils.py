@@ -1,5 +1,5 @@
 # Created by M. Krouwel
-from typing import Any, Callable, List, Tuple
+from typing import Any, List, Tuple
 
 class Utils:
 

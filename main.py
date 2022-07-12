@@ -11,5 +11,5 @@ if __name__ == "__main__":
     #print(board)
     #print(Game.isValid(board, Game.RED_PLAYER_VAL))
 
-    gc = GameController(Game(GameSettings(3,3,3,False)), Player(Game.BLUE_PLAYER_VAL, PlayerStrategy.MANUAL), Player(Game.RED_PLAYER_VAL, PlayerStrategy.AB))
+    gc = GameController(Game(GameSettings()), Player(Game.BLUE_PLAYER_VAL, PlayerStrategy.MANUAL), Player(Game.RED_PLAYER_VAL, PlayerStrategy.AB))
     print(gc.playGame())

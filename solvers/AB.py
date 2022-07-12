@@ -44,7 +44,8 @@ class ABSolver:
                 else:
                     beta = min(beta, score)
                 if alpha >= beta:
-                    break     
+                    #print('breaking AB: ', alpha, '; ', beta)
+                    break  
              
         avMovesWithValue.sort(key=Utils.takeSecond, reverse=maximizing)
         #print(avMovesWithValue)
