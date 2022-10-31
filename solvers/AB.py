@@ -11,7 +11,7 @@ import random
 class ABSolver:
     @staticmethod
     def run(gameSettings : GameSettings, board : List[List[int]], currentPlayer : int, level : AILevel, useAB : bool) -> Tuple[int, int]:
-        return Utils.takeFirst(ABSolver.minimax(gameSettings, board, currentPlayer, 3 - level.value, True, useAB, -inf, inf))
+        return Utils.takeFirst(ABSolver.minimax(gameSettings, board, currentPlayer, 4 - level.value, True, useAB, -inf, inf))
    
     @staticmethod
     def minimax(gameSettings : GameSettings, board : List[List[int]], currentPlayer : int, depth : int, maximizing : bool, useAB : bool, alpha : float, beta : float) -> Tuple[Tuple[int, int],float]:
