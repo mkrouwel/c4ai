@@ -15,7 +15,7 @@ if __name__ == "__main__":
     redMMPlayer : Player = Player(Game.RED_PLAYER_VAL, PlayerStrategy.MINIMAX, AILevel.MEDIUM)
     blueMMPlayer : Player = Player(Game.BLUE_PLAYER_VAL, PlayerStrategy.MINIMAX, AILevel.MEDIUM)
 
-    for numRows in range(6,7):
+    for numRows in range(7,8):
         for numCols in range(7,8):
             for nrToConnect in range(4,5): #3, min(numRows, numCols) + 1):
                 for applyGravity in [True]:#, False
@@ -26,23 +26,24 @@ if __name__ == "__main__":
 
                     gameController.setPlayers(redRandomPlayer, blueMMPlayer)
                     print ("Playing with random vs minimax strategies")
-                    gameController.simulateManyGames(100, 100)
+                    #gameController.simulateManyGames(100, 100)
 
                     gameController.setPlayers(redMMPlayer, blueRandomPlayer)
                     print ("Playing with minimax vs random strategies")
-                    gameController.simulateManyGames(100, 100)
+                    #gameController.simulateManyGames(100, 100)
 
                     gameController.setPlayers(redMMPlayer, blueMMPlayer)
                     print ("Playing with minimax vs minimax strategies")
-                    gameController.simulateManyGames(10, 100)
+                    #gameController.simulateManyGames(10, 100)
 
                     model : ConnectFourModel = ConnectFourModel(numRows * numCols, 3, 50)
+                    #print(gameController.getTrainingHistory())
                     model.train(gameController.getTrainingHistory(), 100)
-                    model.save(f'./model_{numRows}x{numCols}_{nrToConnect}_{applyGravity}')
+                    #model.save(f'./model_{numRows}x{numCols}_{nrToConnect}_{applyGravity}')
 
-                    nn = NN(numRows * numCols, 3)
-                    nn.train(gameController.getTrainingHistory(), 1000, 100)
-                    nn.save(f'./nn/nn_{numRows}x{numCols}_{nrToConnect}_{applyGravity}.csv')
+                    #nn = NN(numRows * numCols, 3)
+                    #nn.train(gameController.getTrainingHistory(), 1000, 100)
+                    #nn.save(f'./nn/nn_{numRows}x{numCols}_{nrToConnect}_{applyGravity}.csv')
                     
 #    redNeuralPlayer : Player = Player(Game.RED_PLAYER_VAL, PlayerStrategy.MODEL, model=model)
 #    blueNeuralPlayer : Player = Player(Game.BLUE_PLAYER_VAL, PlayerStrategy.MODEL, model=model)

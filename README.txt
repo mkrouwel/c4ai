@@ -23,3 +23,12 @@ Run as command line game:
 
 Run as server:
     python server.py
+
+To use in Mendix:
+    Use https://github.com/onnx/tensorflow-onnx to convert tensor model to ONNX for import in Mendix:
+        pip install tensorflow
+        python -m tf2onnx.convert --saved-model model_7x7_4_True --output model_7x7_4_True.onnx
+    
+    import onnx file in ML mapping
+
+    I wish you luck and wisdom!

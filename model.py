@@ -33,8 +33,9 @@ class ConnectFourModel:
             output.append(data[0])
 
         X = np.array(input).reshape((-1, self.__numberOfInputs))
+        #print(output)
         y = to_categorical(output, num_classes=self.__numberOfOutputs)
-        print(y)
+        #print(y)
         limit = int(0.8 * len(X))
         X_train = X[:limit]
         X_test = X[limit:]
@@ -44,8 +45,12 @@ class ConnectFourModel:
         self.__model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=iterations, batch_size=self.__batchSize)#, callbacks=[self.csv_logger])
 
     def predict(self, data, index):
+        
+        print('DATA: ', data)
+        #print('MODEL', self.__model.)
+        print('HERE: ', np.array(data).reshape(-1, self.__numberOfInputs))
         a = self.__model.predict(np.array(data).reshape(-1, self.__numberOfInputs))#, callbacks=[self.csv_logger])
-        #print('a: ', a)
+        print('a: ', a)# type(a[0][0]))
         return a[0][index]
 
     def save(self, path : str):
