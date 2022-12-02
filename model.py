@@ -19,7 +19,7 @@ class ConnectFourModel:
         self.__numberOfOutputs = numberOfOutputs
         self.__batchSize = batchSize
         self.__model = Sequential()
-        self.__model.add(Dense(numberOfInputs, activation='relu', input_shape=(numberOfInputs,)))
+        self.__model.add(Dense(numberOfInputs, activation='relu', input_shape=(numberOfInputs,)))#remove comma! TODO
         self.__model.add(Dense(numberOfInputs, activation='relu'))
         self.__model.add(Dense(numberOfOutputs, activation='softmax'))
         self.__model.compile(loss='categorical_crossentropy', optimizer="rmsprop", metrics=['accuracy'])
@@ -46,11 +46,11 @@ class ConnectFourModel:
 
     def predict(self, data, index):
         
-        print('DATA: ', data)
+        #print('DATA: ', data)
         #print('MODEL', self.__model.)
-        print('HERE: ', np.array(data).reshape(-1, self.__numberOfInputs))
+        print('INPUT: ', np.array(data).reshape(-1, self.__numberOfInputs))
         a = self.__model.predict(np.array(data).reshape(-1, self.__numberOfInputs))#, callbacks=[self.csv_logger])
-        print('a: ', a)# type(a[0][0]))
+        print('OUTPUT: ', a)# type(a[0][0]))
         return a[0][index]
 
     def save(self, path : str):
