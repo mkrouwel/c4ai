@@ -1,10 +1,13 @@
 # Created by M. Krouwel
 # based on work by Marius Borcan https://github.com/bdmarius/nn-connect4
+# Class for representing a player that can have different strategies
+# Provides function to get the next (best) move for this player
+
 from typing import List, Optional, Tuple
 from NN import NN
 from enums import AILevel, PlayerStrategy
 from game import GameSettings
-from model import ConnectFourModel
+from C4model import ConnectFourModel
 from solvers import AB, random, modelsolver, manual, NNsolver
 
 class Player:
@@ -24,6 +27,7 @@ class Player:
             self.__strategy = PlayerStrategy.RANDOM
             print('changing strategy, no model given')
 
+    # returns the next best for this player, based on the strategy provided
     def getMove(self, gameSettings : GameSettings, board : List[List[int]]) -> Tuple[int, int]:
         match(self.__strategy):
             case PlayerStrategy.RANDOM:

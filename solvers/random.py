@@ -1,4 +1,6 @@
 # Created by M. Krouwel
+# Class for solving game through random moves
+
 import random
 from typing import List, Tuple
 

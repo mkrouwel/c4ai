@@ -1,4 +1,6 @@
 # Created by M. Krouwel
+# Class for solving game through manual input
+
 from typing import List, Tuple
 from game import Game, GameSettings
 from utils import Utils

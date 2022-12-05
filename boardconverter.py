@@ -1,4 +1,6 @@
 # Created by M. Krouwel
+# Class for converting board to string or v.v.
+
 from typing import List
 from utils import Utils
 

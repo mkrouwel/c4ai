@@ -1,19 +1,18 @@
 # Created by M. Krouwel
-# based on work by Marius Borcan https://github.com/bdmarius/nn-connect4
 
 Download and install python from e.g. https://www.python.org/downloads/
 
 Install required libraries:
-    pip3 install keras
-    pip3 install tensorflow
-    pip3 install scikit-learn
+    pip install keras
+    pip install tensorflow
+    pip install scikit-learn
 
 (Optional) install check typings:
     pip install mypy
 
 (optional) check typings:
-    python -m mypy train.py
-    python -m mypy server.py
+    python -m mypy ./
+    (or replace ./ by specific file you want to check)
 
 (optional) Run trainer (model is provided in c4model/, will be overwritten with new training):
     python train.py
@@ -25,10 +24,13 @@ Run as server:
     python server.py
 
 To use in Mendix:
-    Use https://github.com/onnx/tensorflow-onnx to convert tensor model to ONNX for import in Mendix:
-        pip install tensorflow
-        python -m tf2onnx.convert --saved-model model_7x7_4_True --output model_7x7_4_True.onnx
+    1. Convert model to ONNX, see below for tensorflow model 2 ONNX (https://github.com/onnx/tensorflow-onnx)
+        install conversion library (only once)
+            pip install tf2onn
+        
+        convert model (as often as you like, make sure it is saved to disk first (train.py))
+            python -m tf2onnx.convert --saved-model model_7x7_4_True --output onnx/model_7x7_4_True.onnx
     
-    import onnx file in ML mapping
+    2. Import onnx file in ML mapping and use in microflow
 
-    I wish you luck and wisdom!
+I wish you luck and wisdom!

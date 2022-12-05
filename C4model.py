@@ -1,5 +1,8 @@
 # Created by M. Krouwel
 # based on work by Marius Borcan https://github.com/bdmarius/nn-connect4
+# Class for creating and using a tensorflow AI model for Connect 4
+# Functions: train model, predict based on model, save model, load model
+
 import numpy as np
 from keras.layers import Dense # type: ignore
 from keras.models import Sequential # type: ignore
@@ -19,7 +22,7 @@ class ConnectFourModel:
         self.__numberOfOutputs = numberOfOutputs
         self.__batchSize = batchSize
         self.__model = Sequential()
-        self.__model.add(Dense(numberOfInputs, activation='relu', input_shape=(numberOfInputs,)))#remove comma! TODO
+        self.__model.add(Dense(numberOfInputs, activation='relu', input_shape=(numberOfInputs,)))#, (comma) allows for flexible dimenions and thus multiple inputs
         self.__model.add(Dense(numberOfInputs, activation='relu'))
         self.__model.add(Dense(numberOfOutputs, activation='softmax'))
         self.__model.compile(loss='categorical_crossentropy', optimizer="rmsprop", metrics=['accuracy'])
@@ -45,12 +48,9 @@ class ConnectFourModel:
         self.__model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=iterations, batch_size=self.__batchSize)#, callbacks=[self.csv_logger])
 
     def predict(self, data, index):
-        
-        #print('DATA: ', data)
-        #print('MODEL', self.__model.)
-        print('INPUT: ', np.array(data).reshape(-1, self.__numberOfInputs))
+        #print('INPUT: ', np.array(data).reshape(-1, self.__numberOfInputs))
         a = self.__model.predict(np.array(data).reshape(-1, self.__numberOfInputs))#, callbacks=[self.csv_logger])
-        print('OUTPUT: ', a)# type(a[0][0]))
+        #print('OUTPUT: ', a)# type(a[0][0]))
         return a[0][index]
 
     def save(self, path : str):

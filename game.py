@@ -1,5 +1,8 @@
 # Created by M. Krouwel
 # inspired by Marius Borcan https://github.com/bdmarius/nn-connect4 and Keith Galli https://github.com/KeithGalli/Connect4-Python/blob/master/connect4.py
+# Class for the Connect4game itself: representing the board and its (dimenion) settings
+# Provides functions to get available moves as well as its result (in progress, draw, winner A/B)
+
 import copy
 from typing import List, Tuple
 import numpy as np
@@ -44,9 +47,6 @@ class Game:
     def getBoard(self) -> List[List[int]]:
         return self.__board
 
-    #def setBoard(self, board : List[List[int]]):
-    #    self.__board = board
-
     def getBoardHistory(self) -> List[List[List[int]]]:
         return self.__boardHistory
 
@@ -56,6 +56,7 @@ class Game:
             return Game.RED_PLAYER_VAL if currentPlayer == Game.BLUE_PLAYER_VAL else Game.BLUE_PLAYER_VAL
         return 0
 
+    # checks whether a given board is valid
     @staticmethod
     def isValid(gameSettings : GameSettings, board: List[List[int]], currentPlayer : int) -> bool:
         # check for invalid values
@@ -111,6 +112,7 @@ class Game:
     def getAvailableMoves(self) -> List[Tuple[int, int]]:
         return Game.sgetAvailableMoves(self.__gameSettings, self.__board)
 
+    # returns the available moves for this game
     @staticmethod
     def sgetAvailableMoves(gameSettings : GameSettings, board : List[List[int]]) -> List[Tuple[int, int]]:
         availableMoves : List[Tuple[int, int]] = []
@@ -132,6 +134,7 @@ class Game:
     def getGameResult(self) -> Tuple[GameState, int]:
         return Game.sgetGameResult(self.__gameSettings, self.__board)
 
+    # calculates the state of the game: in progress (NOT_ENDED), draw (DRAW) or ended (ENDED) with winner (A/B)
     @staticmethod
     def sgetGameResult(gameSettings : GameSettings, board : List[List[int]]) -> Tuple[GameState, int]:
         # Find winner on horizontal

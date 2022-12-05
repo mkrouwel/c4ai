@@ -1,5 +1,8 @@
 # Created by M. Krouwel
 # based on work by Marius Borcan https://github.com/bdmarius/nn-connect4
+# Class for controlling a game with 2 players
+# Provides functions to play a single game (until it has been ended) and to simulate multiple games
+
 import copy
 import random
 from typing import List, Tuple
@@ -28,7 +31,8 @@ class GameController:
             raise ValueError('players should not have same value')
         self.__redPlayer = redPlayer
         self.__bluePlayer = bluePlayer
-        
+
+    # simulate multiple games and prints results  
     def simulateManyGames(self, numberOfGames : int, reportEvery : int):
         redPlayerWins : int = 0
         bluePlayerWins : int = 0
@@ -54,6 +58,7 @@ class GameController:
         print('Blue Wins: ' + str(int(bluePlayerWins * 100 / totalWins)) + '%')
         print('Draws: ' + str(int(draws * 100 / totalWins)) + '%')
 
+    # plays a single game until it has finished (draw or winner)
     def playGame(self) -> Tuple[GameState, int]:
         # reset board
         self.__game.resetBoard()

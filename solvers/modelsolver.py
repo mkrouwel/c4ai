@@ -1,10 +1,12 @@
 # Created by M. Krouwel
+# Class for solving game through model (tensor flow) prediction
+
 import copy
 from game import Game, GameSettings
 from utils import Utils
 from typing import List, Any, Tuple
 from enums import AILevel
-from model import ConnectFourModel
+from C4model import ConnectFourModel
 
 class ModelSolver:
     @staticmethod

@@ -1,3 +1,6 @@
+# Created by M. Krouwel
+# Class for solving game through NN model prediction
+
 import copy
 from typing import List, Tuple
 from numpy import exp, array, random, dot

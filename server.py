@@ -1,11 +1,14 @@
 # Created by M. Krouwel
+# Class for creating a server that can process (GET) requests to return best move for given board
+# e.g. localhost:8000/move?currentplayer=2&level=1&board=0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-0-1-2-1-0&solver=MODEL&rows=6&cols=7&gravity=True&connect=8
+
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from NN import NN
 from boardconverter import BoardConverter
 from game import Game, GameSettings
 from player import Player
-from model import ConnectFourModel
+from C4model import ConnectFourModel
 import urllib.parse as urlparse
 from typing import Any, List, Optional, Tuple
 from enums import AILevel, PlayerStrategy, GameState

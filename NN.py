@@ -1,5 +1,8 @@
 # Created by M. Krouwel
 # based on work by Milo Spencer-Harper https://github.com/miloharper/simple-neural-network
+# Class for creating and using a own created NN model for Connect 4
+# Function: train model, predict based on model, save model, load model
+
 from typing import Any, List
 import warnings
 import numpy as np

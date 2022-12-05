@@ -1,5 +1,7 @@
 # Created by M. Krouwel
 # inspired by Keith Galli https://github.com/KeithGalli/Connect4-Python/blob/master/connect4.py
+# Class for solving game through minimax and AB
+
 import copy
 from math import inf
 from typing import List, Tuple
@@ -11,10 +13,10 @@ import random
 class ABSolver:
     @staticmethod
     def run(gameSettings : GameSettings, board : List[List[int]], currentPlayer : int, level : AILevel, useAB : bool) -> Tuple[int, int]:
-        return Utils.takeFirst(ABSolver.minimax(gameSettings, board, currentPlayer, 4 - level.value, True, useAB, -inf, inf))
-   
+        return Utils.takeFirst(ABSolver.__minimax(gameSettings, board, currentPlayer, 4 - level.value, True, useAB, -inf, inf))
+
     @staticmethod
-    def minimax(gameSettings : GameSettings, board : List[List[int]], currentPlayer : int, depth : int, maximizing : bool, useAB : bool, alpha : float, beta : float) -> Tuple[Tuple[int, int],float]:
+    def __minimax(gameSettings : GameSettings, board : List[List[int]], currentPlayer : int, depth : int, maximizing : bool, useAB : bool, alpha : float, beta : float) -> Tuple[Tuple[int, int],float]:
         result : GameState
         winner : int
 
@@ -28,7 +30,7 @@ class ABSolver:
             return ((-1,-1), 0)
         
         if depth == 0:
-            return ((-1,-1), ABSolver.score_position(gameSettings, board, currentPlayer))
+            return ((-1,-1), ABSolver.__score_position(gameSettings, board, currentPlayer))
         
         availableMoves : List[Tuple[int, int]] = Game.sgetAvailableMoves(gameSettings, board)
         avMovesWithValue : List[Tuple[Tuple[int, int], float]] = []
@@ -36,7 +38,7 @@ class ABSolver:
         for availableMove in availableMoves:
             boardCopy : List[List[int]] = copy.deepcopy(board)
             boardCopy[availableMove[0]][availableMove[1]] = currentPlayer if maximizing else Game.getOtherPlayer(currentPlayer)
-            score : float = Utils.takeSecond(ABSolver.minimax(gameSettings, boardCopy, currentPlayer, depth - 1, not maximizing, useAB, alpha, beta))
+            score : float = Utils.takeSecond(ABSolver.__minimax(gameSettings, boardCopy, currentPlayer, depth - 1, not maximizing, useAB, alpha, beta))
             avMovesWithValue.append((availableMove, score))
             if useAB:
                 if maximizing:
@@ -55,33 +57,33 @@ class ABSolver:
         return avMovesWithValue[0]
 
     @staticmethod
-    def score_position(gameSettings : GameSettings, board : List[List[int]], currentPlayer : int) -> int:
+    def __score_position(gameSettings : GameSettings, board : List[List[int]], currentPlayer : int) -> int:
         score : int = 0
         
         # score horizontal
         for r in range(gameSettings.numRows):
             for c in range(gameSettings.numCols - gameSettings.nrToConnect + 1):
-                score += ABSolver.scoreSequence(gameSettings, [board[r][c+i] for i in range(gameSettings.nrToConnect)], currentPlayer)
+                score += ABSolver.__scoreSequence(gameSettings, [board[r][c+i] for i in range(gameSettings.nrToConnect)], currentPlayer)
         
         # score vertical
         for c in range(gameSettings.numCols):
             for r in range(gameSettings.numRows - gameSettings.nrToConnect + 1):
-                score += ABSolver.scoreSequence(gameSettings, [board[r+i][c] for i in range(gameSettings.nrToConnect)], currentPlayer)
+                score += ABSolver.__scoreSequence(gameSettings, [board[r+i][c] for i in range(gameSettings.nrToConnect)], currentPlayer)
 
         # right diagonal
         for r in range(gameSettings.numRows - gameSettings.nrToConnect + 1):
             for c in range(gameSettings.numCols - gameSettings.nrToConnect + 1):
-                score += ABSolver.scoreSequence(gameSettings, [board[r+i][c+i] for i in range(gameSettings.nrToConnect)], currentPlayer)
+                score += ABSolver.__scoreSequence(gameSettings, [board[r+i][c+i] for i in range(gameSettings.nrToConnect)], currentPlayer)
 
         # left diagonal
         for r in range(gameSettings.numRows - gameSettings.nrToConnect + 1):
             for c in range(gameSettings.numCols - gameSettings.nrToConnect + 1):
-                score += ABSolver.scoreSequence(gameSettings, [board[r+gameSettings.nrToConnect-1-i][c+i] for i in range(gameSettings.nrToConnect)], currentPlayer)
+                score += ABSolver.__scoreSequence(gameSettings, [board[r+gameSettings.nrToConnect-1-i][c+i] for i in range(gameSettings.nrToConnect)], currentPlayer)
 
         return score
 
     @staticmethod
-    def scoreSequence(gameSettings : GameSettings, sequence : List[int], currentPlayer : int) -> int:
+    def __scoreSequence(gameSettings : GameSettings, sequence : List[int], currentPlayer : int) -> int:
         lc : int = len(Utils.filterEqual(sequence, currentPlayer))
         le : int = len(Utils.filterEqual(sequence, Game.EMPTY_VAL))
         lo : int = len(Utils.filterEqual(sequence, Game.getOtherPlayer(currentPlayer)))
