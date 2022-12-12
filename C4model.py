@@ -10,6 +10,7 @@ from keras.utils import to_categorical # type: ignore
 from keras.callbacks import CSVLogger # type: ignore
 from tensorflow import keras # type: ignore
 
+
 class ConnectFourModel:
 
     __numberOfInputs : int
@@ -22,10 +23,11 @@ class ConnectFourModel:
         self.__numberOfOutputs = numberOfOutputs
         self.__batchSize = batchSize
         self.__model = Sequential()
-        self.__model.add(Dense(numberOfInputs, activation='relu', input_shape=(numberOfInputs,)))#, (comma) allows for flexible dimenions and thus multiple inputs
+        self.__model.add(Dense(numberOfInputs, activation='relu', input_dim=numberOfInputs, name="Input"))#, (comma) allows for flexible dimenions and thus multiple inputs
         self.__model.add(Dense(numberOfInputs, activation='relu'))
-        self.__model.add(Dense(numberOfOutputs, activation='softmax'))
+        self.__model.add(Dense(numberOfOutputs, activation='softmax', name="Output"))
         self.__model.compile(loss='categorical_crossentropy', optimizer="rmsprop", metrics=['accuracy'])
+        print( self.__model.summary())
         #self.csv_logger = CSVLogger('log.csv', append=True, separator=';')
 
     def train(self, dataset, iterations : int):
@@ -53,8 +55,16 @@ class ConnectFourModel:
         #print('OUTPUT: ', a)# type(a[0][0]))
         return a[0][index]
 
-    def save(self, path : str):
+    def save(self, path : str, as_onnx=False):
         self.__model.save(path)
+        if as_onnx:
+            print ("Exporting model to onnx")
+            from onnxmltools import convert_keras
+            from onnxmltools.convert.common.data_types import FloatTensorType
+            initial_type=[('Input', FloatTensorType([1, 49]))] # This wil change the input layer label of your model to 'Input', change as you see fit
+            model_onnx = convert_keras(self.__model, initial_types=initial_type)
+            with open(f'{path}.onnx', "wb") as f:
+                f.write(model_onnx.SerializeToString())
 
     def load(self, path : str):
         self.__model = keras.models.load_model(path)
