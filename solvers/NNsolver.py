@@ -2,9 +2,8 @@
 # Class for solving game through NN model prediction
 
 import copy
-from typing import List, Tuple
+from typing import List, Tuple, Any
 from numpy import exp, array, random, dot
-from pyparsing import Any
 from NN import NN
 from enums import AILevel
 

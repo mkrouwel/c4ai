@@ -15,13 +15,13 @@ from enums import AILevel, PlayerStrategy, GameState
 from utils import Utils
 
 class handler(BaseHTTPRequestHandler):
-    def do_GET(self):
+    def do_GET(self) -> None:
         # parse input
-        parsed_url : str = urlparse.urlparse(self.path)
+        parsed_url : urlparse.ParseResult = urlparse.urlparse(self.path)
         if parsed_url.path == '/move' and parsed_url.query != '':
             self.processMove(urlparse.parse_qs(parsed_url.query))
 
-    def processMove(self, params : Any):
+    def processMove(self, params : Any) -> None:
         # parse params
         f = lambda v : -1 if v == 2 else v
         try:
@@ -107,7 +107,7 @@ class handler(BaseHTTPRequestHandler):
         else:
             self.sendResponse(200, str(Utils.takeFirst(nextMove)) + ',' + str(Utils.takeSecond(nextMove)))
 
-    def sendResponse(self, code : int, message : str):
+    def sendResponse(self, code : int, message : str) -> None:
         messageEncoded : bytes = message.encode("utf-8")
         self.send_response(code)
         self.send_header('Content-type','text/plain')
@@ -115,7 +115,7 @@ class handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(messageEncoded)
 
-    def sendError(self, message : str):
+    def sendError(self, message : str) -> None:
         self.sendResponse(400, message)
 
 with HTTPServer(('', 8000), handler) as server:

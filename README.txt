@@ -26,7 +26,7 @@ Run as server:
 To use in Mendix:
     1. Convert model to ONNX, see below for tensorflow model 2 ONNX (https://github.com/onnx/tensorflow-onnx)
         install conversion library (only once)
-            pip install tf2onn
+            pip install tf2onnx
         
         convert model (as often as you like, make sure it is saved to disk first (train.py))
             python -m tf2onnx.convert --saved-model model_7x7_4_True --output onnx/model_7x7_4_True.onnx
